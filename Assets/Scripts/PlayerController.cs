@@ -28,6 +28,8 @@ public class PlayerController : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(0) && canSlam)
             Slam();
+        if (Input.GetKey(KeyCode.Space))
+            Launch(launchForce);
     }
 
     void Slam()
