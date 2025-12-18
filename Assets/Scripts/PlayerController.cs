@@ -7,8 +7,13 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
     public Rigidbody2D rb;
-    public float launchForce = 1100f;
+    public float launchForce = 50f;
+    public float launchAngle = 45f;
     public float slamForce = 35f;
+
+    [SerializeField] private float maxUpwardSpeed = 80f;
+    [SerializeField] private float maxDownwardSpeed = -12f;
+    [SerializeField] private float enemyBounceForce = 12f;
 
     bool canSlam = false;
 
@@ -20,16 +25,44 @@ public class PlayerController : MonoBehaviour
     public void Launch(float timing = 1f)
     {
         rb.velocity = Vector2.zero;
-        rb.AddForce(Vector2.right * launchForce * timing);
+
+        Vector2 dir = Quaternion.Euler(0, 0, launchAngle) * Vector2.right;
+        rb.AddForce(dir * launchForce, ForceMode2D.Impulse);
+        //Vector2 launchDirection = new Vector2(1f, .5f).normalized;
+        //rb.AddForce(launchDirection * launchForce * timing, ForceMode2D.Impulse);
         canSlam = true;
     }
 
+    private void FixedUpdate()
+    {
+        Vector2 vel = rb.velocity;
+        vel.y = Mathf.Clamp(vel.y, maxDownwardSpeed, maxUpwardSpeed);
+        rb.velocity = vel;
+    }
     void Update()
     {
+        //Slam Logic
         if (Input.GetMouseButtonDown(0) && canSlam)
             Slam();
+
+        //Temporary logic for using spacebar to launch
         if (Input.GetKey(KeyCode.Space))
             Launch(launchForce);
+    }
+
+    void BounceOffEnemy(Collision2D collision)
+    {
+        // Direction from enemy to player
+        Vector2 bounceDir = (transform.position - collision.transform.position).normalized;
+
+        // Strong upward bias (important for feel)
+        bounceDir.y = Mathf.Abs(bounceDir.y) + 0.5f;
+        bounceDir.Normalize();
+
+        rb.velocity = Vector2.zero;
+        rb.AddForce(bounceDir * enemyBounceForce, ForceMode2D.Impulse);
+
+        canSlam = true; // re-enable slam after bounce
     }
 
     void Slam()
@@ -42,5 +75,8 @@ public class PlayerController : MonoBehaviour
     {
         if (collider.otherCollider.CompareTag("Ground"))
             canSlam = true;
+
+        if (collider.otherCollider.CompareTag("Enemy"))
+            BounceOffEnemy(collider);
     }
 }

@@ -31,7 +31,7 @@ public class WorldGenerator : MonoBehaviour
         chunks.Enqueue(chunk);
         nextSpawnX += chunk.GetComponent<Chunk>().length;
 
-        // Optional: Remove oldest chunk
+        //Remove oldest chunk
         if (chunks.Count > initialChunks)
             Destroy(chunks.Dequeue());
     }
