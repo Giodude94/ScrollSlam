@@ -50,10 +50,10 @@ public class PlayerController : MonoBehaviour
             Launch(launchForce);
     }
 
-    void BounceOffEnemy(Collision2D collision)
+    void BounceOffEnemy()
     {
         // Direction from enemy to player
-        Vector2 bounceDir = (transform.position - collision.transform.position).normalized;
+        Vector2 bounceDir = (transform.position).normalized;
 
         // Strong upward bias (important for feel)
         bounceDir.y = Mathf.Abs(bounceDir.y) + 0.5f;
@@ -74,9 +74,22 @@ public class PlayerController : MonoBehaviour
     void OnCollisionEnter2D(Collision2D collider)
     {
         if (collider.otherCollider.CompareTag("Ground"))
+        {
+            Debug.Log("The player has collided with the ground.");
             canSlam = true;
+        }
 
-        if (collider.otherCollider.CompareTag("Enemy"))
-            BounceOffEnemy(collider);
+
     }
+
+    void OnTriggerEnter2D(Collider2D collider)
+    {
+        if (collider.gameObject.CompareTag("Enemy"))
+        {
+            //Debug.Log("The player has collided with the enemy sprite.");
+            BounceOffEnemy();
+            Destroy(collider.gameObject);
+        }
+    }
+
 }
