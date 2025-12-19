@@ -4,13 +4,21 @@ using UnityEngine;
 
 public class Enemy : MonoBehaviour
 {
+    [Header("Enemy Type")]
+    public EnemyType enemyType;
+
+    [Header("Bounce Settings")]
     public float bounceMultiplier = 0.4f;
     public float minBounce = 5f;
     public float maxBounce = 15f;
 
+
+
+
     public void Explode()
     {
         // Optional: VFX, sound, destroy enemy
+        Debug.Log("Destroying Game Object.");
         Destroy(gameObject);
     }
 
@@ -23,5 +31,10 @@ public class Enemy : MonoBehaviour
             playerRb.velocity = new Vector2(playerRb.velocity.x, bouncePower);
             Explode();
         }
+    }
+
+    public EnemyType getEnemyType()
+    {
+        return enemyType;
     }
 }

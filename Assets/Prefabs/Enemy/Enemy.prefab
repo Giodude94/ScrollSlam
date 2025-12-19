@@ -172,6 +172,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0bafb8e5a3fcd784a8187f2f57baa1a1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  enemyType: 0
   bounceMultiplier: 0.4
   minBounce: 5
   maxBounce: 15

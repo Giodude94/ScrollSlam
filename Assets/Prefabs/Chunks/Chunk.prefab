@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 735836295842437033}
   - component: {fileID: 134073410751447912}
-  m_Layer: 3
+  m_Layer: 11
   m_Name: Background
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -95,9 +95,9 @@ GameObject:
   - component: {fileID: 2649425893392222436}
   - component: {fileID: 4437663251132745902}
   - component: {fileID: 1576645568028343866}
-  m_Layer: 3
+  m_Layer: 11
   m_Name: Chunk
-  m_TagString: Untagged
+  m_TagString: Ground
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -131,6 +131,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   length: 19.2
+  enemyPrefab: {fileID: 106447173046254976, guid: 62c9d19554f59414b8c0193d73bb1d17, type: 3}
+  minEnemies: 2
+  maxEnemies: 5
 --- !u!61 &1576645568028343866
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -163,7 +166,7 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: -1.7}
+  m_Offset: {x: 0, y: -3.69}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}

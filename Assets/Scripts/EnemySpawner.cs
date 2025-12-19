@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class EnemySpawner : MonoBehaviour
 {
-    [SerializeField] private GameObject enemyPrefab;
+    [SerializeField] private Enemy enemyPrefab;
     [SerializeField] private Transform player;
 
     [SerializeField] private float spawnDistanceAhead = 20f;
@@ -29,28 +29,25 @@ public class EnemySpawner : MonoBehaviour
 
         if (player.position.x + spawnDistanceAhead >= nextSpawnX)
         {
-            SpawnEnemy();
+            //SpawnEnemy();
             nextSpawnX += RandomSpawnRangeX();
         }
 
-        //Cleanup enemies that are further than a certain distance away from the player.
-        var enemies = FindObjectsOfType<Enemy>().Where(go => Vector3.Distance(go.transform.position, player.position) >= cleanupDistance).ToList();
+        
+        //Finding enemies that are more than 20 units behind the player in the x direction and deleting them to free up space.
+        var enemies = FindObjectsByType<Enemy>(FindObjectsSortMode.None).Where(go => (Vector3.Distance(player.position, go.transform.position) > cleanupDistance) && go.transform.position.x < player.position.x).ToList();
+        
         foreach (var enemy in enemies)
         {
+            Debug.Log("Enemy would be destroyed.");
             Destroy(enemy.gameObject);
         }
-    }
-    void SpawnEnemy()
-    {
-        float y = Random.Range(minY, maxY);
-        Vector3 spawnPos = new Vector3(nextSpawnX, y, 0f);
-        Instantiate(enemyPrefab, spawnPos, Quaternion.identity);
     }
     
     float RandomSpawnRangeX()
     {
         float SpawDistanceX=  Random.Range(minX, maxX);
-        Debug.Log(SpawDistanceX.ToString());
+        //Debug.Log(SpawDistanceX.ToString());
         return SpawDistanceX;
     }
 }
