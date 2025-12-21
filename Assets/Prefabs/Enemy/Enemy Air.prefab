@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: -3333178941223793899}
   - component: {fileID: 4951757568883131820}
   m_Layer: 9
-  m_Name: Enemy
+  m_Name: Enemy Air
   m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -172,14 +172,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0bafb8e5a3fcd784a8187f2f57baa1a1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  enemyType: 0
-  moveSpeed: 3
+  enemyType: 1
+  moveSpeed: 2
   bounceMultiplier: 0.4
   minBounce: 5
   maxBounce: 15
   airVerticalBoost: 6
-  airWaveAmplitude: 0
-  airWaveFrequency: 0
+  airWaveAmplitude: 0.4
+  airWaveFrequency: 3
 --- !u!1 &8079984526216344366
 GameObject:
   m_ObjectHideFlags: 0

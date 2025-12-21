@@ -349,17 +349,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 62c9d19554f59414b8c0193d73bb1d17, type: 3}
---- !u!114 &392885470 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 4951757568883131820, guid: 62c9d19554f59414b8c0193d73bb1d17, type: 3}
-  m_PrefabInstance: {fileID: 1491570231}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0bafb8e5a3fcd784a8187f2f57baa1a1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &406895173
 GameObject:
   m_ObjectHideFlags: 0
@@ -429,9 +418,7 @@ MonoBehaviour:
   minY: -2
   maxY: 4
   cleanupDistance: 30
-  enemies:
-  - {fileID: 392885470}
-  allEnemies: []
+  enemies: []
 --- !u!1001 &535532877
 PrefabInstance:
   m_ObjectHideFlags: 0

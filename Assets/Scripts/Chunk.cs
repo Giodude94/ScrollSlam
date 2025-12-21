@@ -43,7 +43,7 @@ public class Chunk : MonoBehaviour
         {
             Debug.Log("Enemy has been spawned.");
             float x = Random.Range(2f, length - 2f);
-            Vector3 pos = transform.position + new Vector3(x, 0, 0);
+            Vector3 pos = transform.position + new Vector3(x, y, 0);
             Instantiate(enemyPrefab, pos, Quaternion.identity, transform);
         }
     }
