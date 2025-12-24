@@ -39,7 +39,7 @@ public class EnemySpawner : MonoBehaviour
         
         foreach (var enemy in enemies)
         {
-            Debug.Log("Enemy would be destroyed.");
+            //Debug.Log("Enemy would be destroyed.");
             Destroy(enemy.gameObject);
         }
     }
