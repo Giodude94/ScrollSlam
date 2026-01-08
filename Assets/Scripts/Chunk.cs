@@ -41,6 +41,7 @@ public class Chunk : MonoBehaviour
 
         if (other.CompareTag("Player"))
         {
+            Debug.Log("Player has crossed the trigger.");
             hasSpawnedEnemies = true;
             SpawnEnemies();
         }

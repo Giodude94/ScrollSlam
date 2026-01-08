@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: -3901504444441829584}
   - component: {fileID: -3333178941223793899}
   - component: {fileID: 4951757568883131820}
+  - component: {fileID: 7700766984802772880}
   m_Layer: 9
   m_Name: Enemy Air
   m_TagString: Enemy
@@ -180,6 +181,19 @@ MonoBehaviour:
   airVerticalBoost: 6
   airWaveAmplitude: 0.4
   airWaveFrequency: 3
+--- !u!114 &7700766984802772880
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 106447173046254976}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ca43437c5fc47a74e954c82960f6aef7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  destroysOnHit: 1
 --- !u!1 &8079984526216344366
 GameObject:
   m_ObjectHideFlags: 0

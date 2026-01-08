@@ -15,10 +15,10 @@ MonoBehaviour:
   groundEnemies:
   - prefab: {fileID: 106447173046254976, guid: 62c9d19554f59414b8c0193d73bb1d17, type: 3}
     weight: 8
-    minChunkIndex: 6
+    minChunkIndex: 0
     maxChunkIndex: 999
   airEnemies:
   - prefab: {fileID: 106447173046254976, guid: 4c14f515b0f9b0c479c46a225c2c2750, type: 3}
     weight: 2
-    minChunkIndex: 6
+    minChunkIndex: 0
     maxChunkIndex: 999

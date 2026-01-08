@@ -1,95 +1,144 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
+
+
 [RequireComponent(typeof(Rigidbody2D))]
+[RequireComponent(typeof(Collider2D))]
+
 
 public class PlayerController : MonoBehaviour
 {
+    public enum PlayerState
+    {
+        Idle,
+        Running
+    }
+
+    [Header("State")]
+    [SerializeField] PlayerState state = PlayerState.Idle;
+
+    [Header("Forward Motion")]
+    [SerializeField] float baseForwardSpeed = 8f;
+    [SerializeField] float airDrag = .05f;
+
+    [Header("Launch")]
+    [SerializeField] float launchForce = 20f;
+    [SerializeField] float launchAngleDegrees = 45f;
+
+    [Header("Slam")]
+    [SerializeField] float slamForce = 25f;
+
+    [Header("Enemy Bounce")]
+    [SerializeField] float enemyBounceForce = 18f;
+    [SerializeField, Range(0f, 1f)] float upwardBias = 0.75f;
+
+
+    [Header("Ceiling Clamp")]
+    [SerializeField] float ceilingBounceDampening = .25f;
+
     public Rigidbody2D rb;
-    public float launchForce = 50f;
-    public float launchAngle = 45f;
-    public float slamForce = 35f;
 
     [SerializeField] private float maxUpwardSpeed = 80f;
     [SerializeField] private float maxDownwardSpeed = -12f;
-    [SerializeField] private float enemyBounceForce = 12f;
-
-    bool canSlam = false;
+    [SerializeField] float maxHeight = 25f;
+    [SerializeField] float verticalDampening = .35f;
 
     void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
     }
-
-    public void Launch(float timing = 1f)
+    public void Start()
     {
-        rb.velocity = Vector2.zero;
-
-        Vector2 dir = Quaternion.Euler(0, 0, launchAngle) * Vector2.right;
-        rb.AddForce(dir * launchForce, ForceMode2D.Impulse);
-        //Vector2 launchDirection = new Vector2(1f, .5f).normalized;
-        //rb.AddForce(launchDirection * launchForce * timing, ForceMode2D.Impulse);
-        canSlam = true;
+        rb.simulated = false;
     }
-
     private void FixedUpdate()
     {
-        Vector2 vel = rb.velocity;
-        vel.y = Mathf.Clamp(vel.y, maxDownwardSpeed, maxUpwardSpeed);
-        rb.velocity = vel;
-    }
-    void Update()
-    {
-        //Slam Logic
-        if (Input.GetMouseButtonDown(0) && canSlam)
-            Slam();
+        if (state != PlayerState.Running) { return; }
 
-        //Temporary logic for using spacebar to launch
-        if (Input.GetKey(KeyCode.Space))
-            Launch(launchForce);
+        MaintainForwardMotion();
+        ApplyAirDrag();
     }
 
-    void BounceOffEnemy()
+    public void StartRun()
     {
-        // Direction from enemy to player
-        Vector2 bounceDir = (transform.position).normalized;
+        if (state != PlayerState.Idle) { return; }
 
-        // Strong upward bias (important for feel)
-        bounceDir.y = Mathf.Abs(bounceDir.y) + 0.5f;
-        bounceDir.Normalize();
+        //Changing state to running when run has started.
+        state = PlayerState.Running;
 
+        rb.simulated = true;
         rb.velocity = Vector2.zero;
-        rb.AddForce(bounceDir * enemyBounceForce, ForceMode2D.Impulse);
 
-        canSlam = true; // re-enable slam after bounce
+        float angleRad = launchAngleDegrees * Mathf.Deg2Rad;
+        Vector2 launchDir = new Vector2(Mathf.Cos(angleRad), Mathf.Sin(angleRad)).normalized;
+
+        rb.AddForce(launchDir * launchForce, ForceMode2D.Impulse);
+
+    }
+
+    void MaintainForwardMotion()
+    {
+        //Preserving vertical velocity
+        rb.velocity = new Vector2(baseForwardSpeed, rb.velocity.y);
+    }
+
+    void ApplyAirDrag()
+    {
+        if (rb.velocity.y != 0f)
+        {
+            rb.velocity = new Vector2 ( rb.velocity.x, rb.velocity.y * (1f - airDrag * Time.fixedDeltaTime));
+        }
     }
 
     void Slam()
     {
-        rb.velocity = new Vector2(rb.velocity.x, -slamForce);
-        canSlam = false;
-    }
+        if(state != PlayerState.Running) { return; }
 
-    void OnCollisionEnter2D(Collision2D collider)
-    {
-        if (collider.otherCollider.CompareTag("Ground"))
+        //Cancelling upward momentum befor slamming
+        if (rb.velocity.y > 0f)
         {
-            Debug.Log("The player has collided with the ground.");
-            canSlam = true;
+            rb.velocity = new Vector2(rb.velocity.x, 0f);
         }
 
+        rb.AddForce(Vector2.down * slamForce, ForceMode2D.Impulse);
 
     }
 
-    void OnTriggerEnter2D(Collider2D collider)
+    void OnTriggerEnter2D(Collider2D other)
     {
-        if (collider.gameObject.CompareTag("Enemy"))
+        if (!other.CompareTag("Ceiling")){ return; }
+
+        if (rb.velocity.y > 0f)
         {
-            //Debug.Log("The player has collided with the enemy sprite.");
-            BounceOffEnemy();
-            Destroy(collider.gameObject);
+            rb.velocity = new Vector2(rb.velocity.x, -rb.velocity.y * ceilingBounceDampening);
         }
     }
+    public void BounceOffEnemy(Vector2 contactPoint)
+    {
+        Debug.Log("Bounce Off Enemy is called");
+        if (state != PlayerState.Running) { return; }
 
+        //Cancelling downward velocity before bounce
+        if (rb.velocity.y < 0f) 
+        {
+            rb.velocity = new Vector2(rb.velocity.x, 0f);
+        }
+
+        Vector2 awayFromEnemy = (Vector2)(transform.position - (Vector3)contactPoint).normalized;
+
+        Vector2 bounceDir = (Vector2.up * upwardBias + awayFromEnemy * (1f - upwardBias)).normalized;
+
+        rb.AddForce(bounceDir * enemyBounceForce, ForceMode2D.Impulse);
+    }
+
+    private void Update()
+    {
+        if (state == PlayerState.Idle && Input.GetKeyDown(KeyCode.Space))
+        {
+            StartRun();
+        }
+    }
 }
