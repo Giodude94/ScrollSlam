@@ -13,7 +13,6 @@ GameObject:
   - component: {fileID: 5172945024959992287}
   - component: {fileID: 1215204813866298286}
   - component: {fileID: 5028374077471316376}
-  - component: {fileID: 2830957154921981195}
   m_Layer: 8
   m_Name: Player
   m_TagString: Player
@@ -176,7 +175,7 @@ MonoBehaviour:
   baseForwardSpeed: 8
   airDrag: 0.05
   launchForce: 10
-  launchAngleDegrees: 45
+  launchAngleDegrees: 30
   slamForce: 35
   enemyBounceForce: 12
   upwardBias: 0.75
@@ -186,16 +185,3 @@ MonoBehaviour:
   maxDownwardSpeed: -12
   maxHeight: 25
   verticalDampening: 0.35
---- !u!114 &2830957154921981195
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3201690805585114297}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ca43437c5fc47a74e954c82960f6aef7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  destroysOnHit: 1

@@ -14,8 +14,6 @@ public class ChunkTrigger : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        Debug.Log("Player crossed the trigger.");
-
         if (!other.CompareTag("Player")) {  return; }
 
         chunk.TriggerSpawn();

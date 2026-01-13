@@ -43,8 +43,6 @@ public class Chunk : MonoBehaviour
     }
     void SpawnEnemies()
     {
-        Debug.Log($"Chunk {chunkIndex} spawning using {spawnConfig.name}");
-
         if (spawnConfig == null){ return; }
 
         int difficulty = spawnConfig.GetDifficultyForChunk(chunkIndex);

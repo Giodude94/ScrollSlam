@@ -24,9 +24,14 @@ public class PlayerController : MonoBehaviour
     [SerializeField] float baseForwardSpeed = 8f;
     [SerializeField] float airDrag = .05f;
 
-    [Header("Launch")]
-    [SerializeField] float launchForce = 20f;
+    [Header("Launch Charge")]
+    [SerializeField] float minLaunchForce = 8f;
+    [SerializeField] float maxLaunchForce = 30f;
+    [SerializeField] float chargeTimeToMax = 1.5f;
     [SerializeField] float launchAngleDegrees = 45f;
+
+    float currentCharge;
+    bool isCharging;
 
     [Header("Slam")]
     [SerializeField] float slamForce = 25f;
@@ -41,10 +46,10 @@ public class PlayerController : MonoBehaviour
 
     public Rigidbody2D rb;
 
-    [SerializeField] private float maxUpwardSpeed = 80f;
-    [SerializeField] private float maxDownwardSpeed = -12f;
-    [SerializeField] float maxHeight = 25f;
-    [SerializeField] float verticalDampening = .35f;
+    //[SerializeField] private float maxUpwardSpeed = 80f;
+    //[SerializeField] private float maxDownwardSpeed = -12f;
+    //[SerializeField] float maxHeight = 25f;
+    //[SerializeField] float verticalDampening = .35f;
 
     void Awake()
     {
@@ -52,7 +57,17 @@ public class PlayerController : MonoBehaviour
     }
     public void Start()
     {
-        rb.simulated = false;
+        //rb.simulated = false;
+        rb.gravityScale = 0f;
+        rb.velocity = Vector2.zero;
+        rb.constraints = RigidbodyConstraints2D.FreezeAll;
+    }
+
+    private void Update()
+    {
+        if(state != PlayerState.Idle) { return; }
+
+        HandleLaunchCharge();
     }
     private void FixedUpdate()
     {
@@ -62,21 +77,49 @@ public class PlayerController : MonoBehaviour
         ApplyAirDrag();
     }
 
-    public void StartRun()
+    void HandleLaunchCharge()
+    {
+        
+
+        if (Input.GetMouseButtonDown(0))
+        {
+            isCharging = true;
+            currentCharge = minLaunchForce;
+        }
+
+        if (isCharging && Input.GetMouseButtonDown(0))
+        {
+            currentCharge += (maxLaunchForce - minLaunchForce) * (Time.deltaTime / chargeTimeToMax);
+            
+            currentCharge = Mathf.Clamp(currentCharge, minLaunchForce, maxLaunchForce);
+        }
+
+        if (isCharging && Input.GetMouseButtonUp(0))
+        {
+            isCharging = false;
+            StartRunWithForce(currentCharge);
+        }
+    }
+
+    void StartRunWithForce(float force)
     {
         if (state != PlayerState.Idle) { return; }
 
-        //Changing state to running when run has started.
         state = PlayerState.Running;
 
-        rb.simulated = true;
+        //rb.simulated = true;
+        rb.constraints = RigidbodyConstraints2D.None;
+        rb.gravityScale = 1f;
         rb.velocity = Vector2.zero;
 
         float angleRad = launchAngleDegrees * Mathf.Deg2Rad;
-        Vector2 launchDir = new Vector2(Mathf.Cos(angleRad), Mathf.Sin(angleRad)).normalized;
+        Vector2 launchDir = new Vector2( Mathf.Cos(angleRad), Mathf.Sin(angleRad)).normalized;
 
-        rb.AddForce(launchDir * launchForce, ForceMode2D.Impulse);
+        Physics2D.SyncTransforms();
+        //Apply impulse
+        rb.AddForce(launchDir * force, ForceMode2D.Impulse);
 
+        rb.velocity = new Vector2(baseForwardSpeed, rb.velocity.y);
     }
 
     void MaintainForwardMotion()
@@ -132,13 +175,5 @@ public class PlayerController : MonoBehaviour
         Vector2 bounceDir = (Vector2.up * upwardBias + awayFromEnemy * (1f - upwardBias)).normalized;
 
         rb.AddForce(bounceDir * enemyBounceForce, ForceMode2D.Impulse);
-    }
-
-    private void Update()
-    {
-        if (state == PlayerState.Idle && Input.GetKeyDown(KeyCode.Space))
-        {
-            StartRun();
-        }
     }
 }
