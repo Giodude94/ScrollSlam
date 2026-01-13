@@ -87,6 +87,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4267038035870814622}
   - component: {fileID: 5638801832855996833}
+  - component: {fileID: 404817118447737575}
   m_Layer: 12
   m_Name: AirSpawnArea
   m_TagString: Untagged
@@ -154,6 +155,19 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 17.076395, y: 4.8926697}
   m_EdgeRadius: 0
+--- !u!114 &404817118447737575
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1272139674275129732}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bd55b7039dc24e441ae0dc1b339f1701, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  box: {fileID: 5638801832855996833}
 --- !u!1 &2736156706489961007
 GameObject:
   m_ObjectHideFlags: 0
@@ -288,22 +302,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   chunkIndex: 0
   length: 19.2
-  groundSpawnArea:
-    collider: {fileID: 4646803667316938106}
-  airSpawnArea:
-    collider: {fileID: 5638801832855996833}
-  spawnTable: {fileID: 11400000, guid: 93009eb84f58e364e820ad0a777163ce, type: 2}
-  minEnemies: 3
-  maxEnemies: 10
-  maxAirEnemyChance: 0.4
+  spawnConfig: {fileID: 11400000, guid: 7619fe3132f770948bdea004b5e56ace, type: 2}
+  groundSpawnArea: {fileID: 1734034888318839685}
+  airSpawnArea: {fileID: 404817118447737575}
   difficultyCurve:
     serializedVersion: 2
     m_Curve:
     - serializedVersion: 3
       time: 0
-      value: 0
+      value: 0.5
       inSlope: 0
-      outSlope: 1
+      outSlope: 0
       tangentMode: 0
       weightedMode: 0
       inWeight: 0
@@ -312,7 +321,7 @@ MonoBehaviour:
       time: 1
       value: 1
       inSlope: 1
-      outSlope: 0
+      outSlope: 1
       tangentMode: 0
       weightedMode: 0
       inWeight: 0
@@ -331,6 +340,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4449190301478403454}
   - component: {fileID: 4646803667316938106}
+  - component: {fileID: 1734034888318839685}
   m_Layer: 12
   m_Name: GroundSpawnArea
   m_TagString: Untagged
@@ -398,6 +408,19 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 17.11144, y: 1}
   m_EdgeRadius: 0
+--- !u!114 &1734034888318839685
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5045408536495972836}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bd55b7039dc24e441ae0dc1b339f1701, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  box: {fileID: 4646803667316938106}
 --- !u!1 &5652788854498289186
 GameObject:
   m_ObjectHideFlags: 0
@@ -408,6 +431,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7670464561196711925}
   - component: {fileID: 1070774118808095787}
+  - component: {fileID: 5462469397770784664}
   m_Layer: 0
   m_Name: PlayerTrigger
   m_TagString: Untagged
@@ -475,6 +499,18 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1, y: 12.887247}
   m_EdgeRadius: 0
+--- !u!114 &5462469397770784664
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5652788854498289186}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 11fc0a0e94ebd17439b4c82f87b4174a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &5912853447390091088
 GameObject:
   m_ObjectHideFlags: 0

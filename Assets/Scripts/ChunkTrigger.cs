@@ -4,15 +4,20 @@ using UnityEngine;
 
 public class ChunkTrigger : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+
+    Chunk chunk;
+
+    private void Awake()
     {
-        
+        chunk = GetComponentInParent<Chunk>();
     }
 
-    // Update is called once per frame
-    void Update()
+    private void OnTriggerEnter2D(Collider2D other)
     {
-        
+        Debug.Log("Player crossed the trigger.");
+
+        if (!other.CompareTag("Player")) {  return; }
+
+        chunk.TriggerSpawn();
     }
 }

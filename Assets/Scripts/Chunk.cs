@@ -7,21 +7,16 @@ using static UnityEngine.EventSystems.EventTrigger;
 public class Chunk : MonoBehaviour
 {
     //Currently the Chunk moves background and spawns enemies.
-    [Header("Chunk Info")]
+    [Header("Chunk Indexing")]
     public int chunkIndex;
     public float length = 19.2f;
 
+    [Header("Spawn Config")]
+    [SerializeField] EnemySpawnConfig spawnConfig;
+    
     [Header("Spawn Areas")]
     public SpawnArea groundSpawnArea;
     public SpawnArea airSpawnArea;
-    
-    [Header("Enemy Spawning")]
-    public EnemySpawnTable spawnTable;
-
-    [Header("Spawn Tuning")]
-    public int minEnemies = 1;
-    public int maxEnemies = 7;
-    [Range(0f, 1f)] public float maxAirEnemyChance = .4f;
 
     [Header("Difficulty Ramp")]
     public AnimationCurve difficultyCurve = AnimationCurve.Linear(0, 0, 1, 1);
@@ -48,35 +43,60 @@ public class Chunk : MonoBehaviour
     }
     void SpawnEnemies()
     {
-        float difficulty = GetDifficulty();
+        Debug.Log($"Chunk {chunkIndex} spawning using {spawnConfig.name}");
 
-        int enemyCount = Mathf.RoundToInt(Mathf.Lerp(minEnemies, maxEnemies, difficulty));
+        if (spawnConfig == null){ return; }
 
-        float airChance = Mathf.Lerp(0f, maxAirEnemyChance, difficulty);
-        //Debug.Log("Enemy Count: " + enemyCount);
-        for (int i = 0; i < enemyCount; i++)
+        int difficulty = spawnConfig.GetDifficultyForChunk(chunkIndex);
+
+        SpawnEnemyGroup(
+            spawnConfig.groundEnemies,
+            spawnConfig.groundCountCurve,
+            groundSpawnArea,
+            difficulty);
+
+        SpawnEnemyGroup(
+            spawnConfig.airEnemies,
+            spawnConfig.airCountCurve,
+            airSpawnArea,
+            difficulty);
+    }
+
+    void SpawnEnemyGroup(List<EnemySpawnEntry> entries, AnimationCurve countCurve, SpawnArea area, int difficulty)
+    { 
+        //Checking cases where there are empty or null entries or spawn areas.
+        if (entries == null || entries.Count == 0 || area == null) {  return; }
+
+        int spawnCount = Mathf.RoundToInt(countCurve.Evaluate(difficulty));
+        if (spawnCount <= 0) { return; }
+
+        for (int i = 0; i < spawnCount; i++)
         {
-            EnemyType type = Random.value < airChance ? EnemyType.Air : EnemyType.Ground;
-            SpawnEnemy(type);
+            EnemySpawnEntry entry = GetWeightedRandom(entries);
+            Vector2 spawnPos = area.GetRandomPoint();
+
+            Instantiate(entry.prefab, spawnPos, Quaternion.identity, transform);
         }
     }
 
-    void SpawnEnemy(EnemyType type)
-    { 
-        List<EnemySpawnEntry> list = type == EnemyType.Ground ? spawnTable.groundEnemies : spawnTable.airEnemies;
-
-        //Obtain random prefab from specified type (Air/Ground)
-        GameObject prefab = GetRandomEnemyPrefab(list);
-        
-        if (prefab == null) 
+    EnemySpawnEntry GetWeightedRandom(List<EnemySpawnEntry> entries)
+    {
+        float totalWeight = 0f;
+        foreach (var entry in entries)
         {
-            return; 
+            totalWeight += entry.weight;
         }
 
-        //Get Random point to spawn within the collider
-        Vector3 spawnPos = type == EnemyType.Ground ? groundSpawnArea.GetRandomWorldPoint(transform) : airSpawnArea.GetRandomWorldPoint(transform);
+        float roll = Random.Range(0f, totalWeight);
 
-        Instantiate(prefab,spawnPos, Quaternion.identity);
+        float cumulative = 0f;
+        foreach (var entry in entries)
+        {
+            cumulative += entry.weight;
+            if (roll <= cumulative) { return entry; }
+        }
+
+        return entries[0];
     }
     GameObject GetRandomEnemyPrefab(List<EnemySpawnEntry> list){
         int totalWeight = 0;
@@ -116,5 +136,13 @@ public class Chunk : MonoBehaviour
         return difficultyCurve.Evaluate(t);
     }
 
+    public void TriggerSpawn()
+    {
+        if (hasSpawnedEnemies) { return; }
 
+        hasSpawnedEnemies = true;
+
+        SpawnEnemies();
+
+    }
 }

@@ -2,21 +2,22 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[System.Serializable]
-public class SpawnArea
+public class SpawnArea : MonoBehaviour
 {
-    public BoxCollider2D collider;
+    public BoxCollider2D box;
 
-    public Vector3 GetRandomWorldPoint(Transform chunkTransform)
+    private void Awake()
     {
-        if (collider == null) { return Vector3.zero; }
+        box = GetComponent<BoxCollider2D>();
+    }
 
-        Bounds b = collider.bounds;
-        
-        float x = Random.Range(b.min.x, b.max.x);
-        float y = Random.Range(b.min.y, b.max.y);
+    public Vector2 GetRandomPoint()
+    {
+        Bounds b = box.bounds;
+        return new Vector2(
+            Random.Range(b.min.x, b.max.x),
+            Random.Range(b.min.y, b.max.y)
+            );
 
-        //Convert World to Local space 
-        return new Vector3(x,y, 0f);
     }
 }
