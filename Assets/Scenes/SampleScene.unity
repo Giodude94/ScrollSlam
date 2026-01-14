@@ -374,6 +374,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
+    - target: {fileID: 5028374077471316376, guid: ca3e9ae8c7938a640b1356da389c0a96, type: 3}
+      propertyPath: maxSlams
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 5028374077471316376, guid: ca3e9ae8c7938a640b1356da389c0a96, type: 3}
+      propertyPath: minGroundBounceForce
+      value: 15.11
+      objectReference: {fileID: 0}
     - target: {fileID: 6603798182787006898, guid: ca3e9ae8c7938a640b1356da389c0a96, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -414,8 +422,7 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents:
-    - {fileID: 2830957154921981195, guid: ca3e9ae8c7938a640b1356da389c0a96, type: 3}
+    m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []

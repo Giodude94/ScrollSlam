@@ -174,14 +174,13 @@ MonoBehaviour:
   state: 0
   baseForwardSpeed: 8
   airDrag: 0.05
-  launchForce: 10
+  minLaunchForce: 19.62
+  maxLaunchForce: 30
+  chargeTimeToMax: 1.5
   launchAngleDegrees: 30
   slamForce: 35
   enemyBounceForce: 12
   upwardBias: 0.75
   ceilingBounceDampening: 0.25
   rb: {fileID: 3229661360622345210}
-  maxUpwardSpeed: 80
-  maxDownwardSpeed: -12
-  maxHeight: 25
-  verticalDampening: 0.35
+  maxSlams: 3
