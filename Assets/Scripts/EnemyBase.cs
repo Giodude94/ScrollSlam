@@ -3,35 +3,39 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(Collider2D))]
-public class EnemyBase : MonoBehaviour
+public abstract class EnemyBase : MonoBehaviour
 {
-    [SerializeField] bool destroysOnHit = true;
+    [Header("Movement")]
+    [SerializeField] protected float moveSpeed = 4f;
 
-    private void OnCollisionEnter2D(Collision2D collision)
+    protected bool isAlive = true;
+
+    protected virtual void Update()
     {
-        Debug.Log("Enemy hit player");
-        Debug.Log("Collision from: " + collision.gameObject.tag);
-        if (!collision.gameObject.CompareTag("Player")) {
-            Debug.Log("Collider is not from player."); 
-            return; }
+        if (isAlive) { return; }
 
-        PlayerController player = collision.collider.GetComponent<PlayerController>(); 
-        
-        //Player Validity Check
-        if (player == null) {
-            Debug.Log("Player check is null."); 
-            return; }
+        Move();
+    }
 
+    protected virtual void Move()
+    {
+        transform.Translate(Vector2.left * moveSpeed * Time.deltaTime);
+    }
 
-        Vector2 contactPoint = collision.contacts[0].point;
+    protected virtual void OnTriggerEnter2D(Collider2D other)
+    {
+        if (!isAlive) { return; }
 
-        player.BounceOffEnemy(contactPoint);
+        if (!other.CompareTag("Player")) { return; }
 
-        if (destroysOnHit) 
-        {
-            Destroy(gameObject);
-        }
+        HandlePlayerCollision(other);
+    }
 
+    protected abstract void HandlePlayerCollision(Collider2D player);
 
+    protected virtual void Die()
+    {
+        isAlive = false;
+        Destroy(gameObject);
     }
 }

@@ -56,7 +56,7 @@ public class PlayerController : MonoBehaviour
     //int currentSlams;
 
     int currentSlams = 7;
-    bool isSlamming;
+    public bool isSlamming;
     bool isGrounded;
 
     //[SerializeField] private float maxUpwardSpeed = 80f;
