@@ -5,12 +5,8 @@ using UnityEngine;
 [System.Serializable]
 public class EnemySpawnEntry
 {
+    public EnemyType enemyType;
     public GameObject prefab;
-
-    [Range(0f, 10f)]
-    public int weight = 1;
-
-    [Header("Difficulty Gates")]
-    public int minChunkIndex = 0;
-    public int maxChunkIndex = 999;
+    public int minCount;
+    public int maxCount;
 }

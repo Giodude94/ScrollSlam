@@ -4,19 +4,24 @@ using UnityEngine;
 
 public class SpawnArea : MonoBehaviour
 {
-    public BoxCollider2D box;
+    [SerializeField] private EnemyType allowedType;
+    private Collider2D col;
+
+    public EnemyType AllowedType => allowedType;
 
     private void Awake()
     {
-        box = GetComponent<BoxCollider2D>();
+        col = GetComponent<Collider2D>();
     }
 
     public Vector2 GetRandomPoint()
     {
-        Bounds b = box.bounds;
-        return new Vector2(
+        Bounds b = col.bounds;
+
+        return new Vector3(
             Random.Range(b.min.x, b.max.x),
-            Random.Range(b.min.y, b.max.y)
+            Random.Range(b.min.y, b.max.y),
+            0f
             );
 
     }

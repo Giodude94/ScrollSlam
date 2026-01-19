@@ -5,77 +5,79 @@ using UnityEngine;
 public class WorldGenerator : MonoBehaviour
 {
 
+    [Header("References")]
+    [SerializeField] private Transform player;
+    [SerializeField] private Chunk chunkPrefab;
+
+
     [Header("Chunk Settings")]
-    public Chunk chunkPrefab;
-    public int initialChunks = 3;
-    private float chunkLength;
+    //public Chunk chunkPrefab;
+    //public int initialChunks = 3;
+    //private float chunkLength;
+    [SerializeField] private int chunksAhead = 4;
+    [SerializeField] private int chunksBehind = 2;
+    [SerializeField] public float chunkWidth = 19.2f;
 
-    [Header("Player Reference")]
-    public Transform player;
-
-    [Header("Cleanup")]
-    public int maxChunksAlive = 6;
-
-    int currentChunkIndex = 1;
-    float nextSpawnX = 0f;
-
-    readonly private Queue<Chunk> spawnedChunks= new Queue<Chunk>();
+    private Dictionary<int, Chunk> activeChunks = new();
+    private int currentPlayerChunkIndex;
 
     void Start()
     {
-        chunkLength = chunkPrefab.length;
-        Chunk startingChunk = FindObjectOfType<Chunk>();
-
-        if (startingChunk == null) { return; }
-
-        startingChunk.chunkIndex = 0;
-        spawnedChunks.Enqueue(startingChunk);
-
-        nextSpawnX = startingChunk.transform.position.x + chunkLength;
-
-        //chunkLength = chunkPrefab.length;
-        //SpawnInitialChunks();
+        currentPlayerChunkIndex = GetChunkIndex(player.position.x);
+        UpdateChunks(force: true);
     }
 
     void Update()
     {
-        if (player.position.x > nextSpawnX - (chunkLength * 2))
+        int newChunkIndex = GetChunkIndex(player.position.x);
+
+        if (newChunkIndex != currentPlayerChunkIndex)
         {
-            SpawnChunk();
+            currentPlayerChunkIndex = newChunkIndex;
+            UpdateChunks(force: false);
         }
     }
-    void SpawnInitialChunks()
+    void UpdateChunks(bool force)
     {
-        for (int i = 0; i < initialChunks; i++)
+        int minIndex = currentPlayerChunkIndex - chunksBehind;
+        int maxIndex = currentPlayerChunkIndex + chunksAhead;
+
+        for (int i = minIndex; i <= maxIndex; i++)
         {
-            SpawnChunk();
+            if (!activeChunks.ContainsKey(i))
+            {
+                SpawnChunk(i);
+            }
+        }
+
+        List<int> toRemove = new();
+        foreach (var kvp in activeChunks)
+        {
+            if (kvp.Key < minIndex || kvp.Key > maxIndex)
+            {
+                Destroy(kvp.Value.gameObject);
+                toRemove.Add(kvp.Key);
+            }
+        }
+
+        foreach (int index in toRemove)
+        {
+            activeChunks.Remove(index);
         }
     }
 
-    void SpawnChunk()
+    void SpawnChunk(int index)
     {
-        //Debug.Log("Next Spawnx value: " + nextSpawnX);
-        Vector3 position = new Vector3(nextSpawnX, 0f, 0f);
+        Vector3 position = new (index * chunkWidth, 0f, 0f);
+        Chunk chunk = Instantiate(chunkPrefab, position, Quaternion.identity, transform);
 
-        Chunk chunk = Instantiate(chunkPrefab, position, Quaternion.identity);
-
-        chunk.chunkIndex = currentChunkIndex;
-        currentChunkIndex++;
-
-        spawnedChunks.Enqueue(chunk);
-
-        nextSpawnX += chunkLength;
-
-        CleanupOldChunks();
+        chunk.Initialize(index);
+        activeChunks.Add(index, chunk);
 
     }
 
-    void CleanupOldChunks()
+    private int GetChunkIndex(float x)
     {
-        while (spawnedChunks.Count > maxChunksAlive)
-        {
-            Chunk oldChunk = spawnedChunks.Dequeue();
-            Destroy(oldChunk.gameObject);
-        }
+        return Mathf.FloorToInt(x / chunkWidth);
     }
 }

@@ -1,5 +1,7 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Mathematics;
 using Unity.VisualScripting;
 using UnityEngine;
 using static UnityEngine.EventSystems.EventTrigger;
@@ -7,140 +9,55 @@ using static UnityEngine.EventSystems.EventTrigger;
 public class Chunk : MonoBehaviour
 {
     //Currently the Chunk moves background and spawns enemies.
-    [Header("Chunk Indexing")]
-    public int chunkIndex;
+    [Header("Chunk Data")]
+    [SerializeField] private EnemySpawnConfig spawnConfig;
     public float length = 19.2f;
 
-    [Header("Spawn Config")]
-    [SerializeField] EnemySpawnConfig spawnConfig;
-    
     [Header("Spawn Areas")]
-    public SpawnArea groundSpawnArea;
-    public SpawnArea airSpawnArea;
+    [SerializeField] private SpawnArea[] spawnAreas;
 
-    [Header("Difficulty Ramp")]
-    public AnimationCurve difficultyCurve = AnimationCurve.Linear(0, 0, 1, 1);
-    public int maxDifficultyChunk = 40;
+    private bool hasSpawned = false;
+    private int chunkIndex;
 
 
-    private bool hasSpawnedEnemies = false;
-
-
-    private void Start()
+    public void Initialize(int index)
     {
-        //SpawnEnemies();
-    }
-    void OnTriggerEnter2D(Collider2D other)
-    {
-        if (hasSpawnedEnemies) { return; }
-
-        if (other.CompareTag("Player"))
-        {
-            Debug.Log("Player has crossed the trigger.");
-            hasSpawnedEnemies = true;
-            SpawnEnemies();
-        }
+        chunkIndex = index;
+        hasSpawned = false;
     }
     void SpawnEnemies()
     {
-        if (spawnConfig == null){ return; }
+        if (spawnConfig == null || spawnAreas.Length == 0) { return; }
 
-        int difficulty = spawnConfig.GetDifficultyForChunk(chunkIndex);
-
-        SpawnEnemyGroup(
-            spawnConfig.groundEnemies,
-            spawnConfig.groundCountCurve,
-            groundSpawnArea,
-            difficulty);
-
-        SpawnEnemyGroup(
-            spawnConfig.airEnemies,
-            spawnConfig.airCountCurve,
-            airSpawnArea,
-            difficulty);
-    }
-
-    void SpawnEnemyGroup(List<EnemySpawnEntry> entries, AnimationCurve countCurve, SpawnArea area, int difficulty)
-    { 
-        //Checking cases where there are empty or null entries or spawn areas.
-        if (entries == null || entries.Count == 0 || area == null) {  return; }
-
-        int spawnCount = Mathf.RoundToInt(countCurve.Evaluate(difficulty));
-        if (spawnCount <= 0) { return; }
-
-        for (int i = 0; i < spawnCount; i++)
+        foreach (var entry in spawnConfig.entries)
         {
-            EnemySpawnEntry entry = GetWeightedRandom(entries);
-            Vector2 spawnPos = area.GetRandomPoint();
+            int count = UnityEngine.Random.Range(entry.minCount, entry.maxCount + 1);
 
-            Instantiate(entry.prefab, spawnPos, Quaternion.identity, transform);
+            for (int i = 0; i < count; i++)
+            {
+                SpawnArea area = GetSpawnArea(entry.enemyType);
+                if (area == null) { continue; }
+
+                Vector3 spawnPos = area.GetRandomPoint();
+                Instantiate(entry.prefab, spawnPos, Quaternion.identity, transform);
+            }
         }
     }
 
-    EnemySpawnEntry GetWeightedRandom(List<EnemySpawnEntry> entries)
+    private SpawnArea GetSpawnArea(EnemyType type) 
     {
-        float totalWeight = 0f;
-        foreach (var entry in entries)
+        foreach (var area in spawnAreas) 
         {
-            totalWeight += entry.weight;
-        }
-
-        float roll = Random.Range(0f, totalWeight);
-
-        float cumulative = 0f;
-        foreach (var entry in entries)
-        {
-            cumulative += entry.weight;
-            if (roll <= cumulative) { return entry; }
-        }
-
-        return entries[0];
-    }
-    GameObject GetRandomEnemyPrefab(List<EnemySpawnEntry> list){
-        int totalWeight = 0;
-
-        foreach (var enemy in list)
-        {
-            //If we are out of the bounds of the chunkIndex then we do nothing.
-            if (chunkIndex < enemy.minChunkIndex || chunkIndex > enemy.maxChunkIndex) { continue; } 
-
-            totalWeight += enemy.weight;
-        }
-
-        if (totalWeight == 0) {  return null; }
-
-        float roll = Random.Range(0, totalWeight);
-
-        foreach (var enemy in list) 
-        {
-            if (chunkIndex < enemy.minChunkIndex || chunkIndex > enemy.maxChunkIndex) { continue ; }
-
-            roll -= enemy.weight;
-            if (roll < 0) { return enemy.prefab; }
-
+            if (area.AllowedType == type) {  return area; }
         }
         return null;
     }
-    int GetEnemyCount()
+
+    public void OnPlayerEnteredChunk()
     {
-        float distance = FindObjectOfType<PlayerController>().transform.position.x;
-        return Mathf.Clamp(2 + Mathf.FloorToInt(distance / 100f), 2, 10);
-    }
-
-    float GetDifficulty()
-    {
-        float t = Mathf.Clamp01((float)chunkIndex / maxDifficultyChunk);
-
-        return difficultyCurve.Evaluate(t);
-    }
-
-    public void TriggerSpawn()
-    {
-        if (hasSpawnedEnemies) { return; }
-
-        hasSpawnedEnemies = true;
+        if (hasSpawned) { return; }
 
         SpawnEnemies();
-
+        hasSpawned = true;
     }
 }

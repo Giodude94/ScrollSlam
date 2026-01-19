@@ -5,17 +5,24 @@ using UnityEngine;
 public class ChunkTrigger : MonoBehaviour
 {
 
-    Chunk chunk;
+    private Chunk ownerChunk;
+    private bool triggered;
 
     private void Awake()
     {
-        chunk = GetComponentInParent<Chunk>();
+        ownerChunk = GetComponentInParent<Chunk>();
+
+        Collider2D col = GetComponent<Collider2D>();
+        col.isTrigger = true;
     }
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (!other.CompareTag("Player")) {  return; }
+        if (triggered) { return; }
 
-        chunk.TriggerSpawn();
+        if (!other.CompareTag("Player")) { return; }
+
+        triggered = true;
+        ownerChunk.OnPlayerEnteredChunk();
     }
 }

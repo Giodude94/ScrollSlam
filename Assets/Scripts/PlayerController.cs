@@ -11,233 +11,111 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    public enum PlayerState
-    {
-        Idle,
-        Running
-    }
-
-    [Header("State")]
-    [SerializeField] PlayerState state = PlayerState.Idle;
-
-    [Header("Forward Motion")]
-    [SerializeField] float baseForwardSpeed = 8f;
-    [SerializeField] float airDrag = .05f;
-
-    [Header("Launch Charge")]
-    [SerializeField] float minLaunchForce = 8f;
-    [SerializeField] float maxLaunchForce = 30f;
-    [SerializeField] float chargeTimeToMax = 1.5f;
-    [SerializeField] float launchAngleDegrees = 45f;
-
-    float currentCharge;
-    bool isCharging;
+    [Header("Launch")]
+    [SerializeField] private float launchForce = 22f;
+    [SerializeField] private float launchAngle = 45f;
 
     [Header("Slam")]
-    [SerializeField] float slamForce = 25f;
+    [SerializeField] private float slamForce = 40f;
+    [SerializeField] private float bounceForce = 18f;
+    [SerializeField] private int maxSlams = 3;
 
-    [Header("Enemy Bounce")]
-    [SerializeField] float enemyBounceForce = 18f;
-    [SerializeField, Range(0f, 1f)] float upwardBias = 0.75f;
+    [Header("Limits")]
+    [SerializeField] private float maxHeight = 25f;
 
+    private Rigidbody2D rb;
 
-    [Header("Ceiling Clamp")]
-    [SerializeField] float ceilingBounceDampening = .25f;
-
-    public Rigidbody2D rb;
-
-    [Header("Slam Charges")]
-    [SerializeField] int maxSlams = 7;
-
-    [Header("Ground Bounce")]
-    [SerializeField] float groundBounceMultiplier = 0.75f;
-    [SerializeField] float minGroundBounceForce = 8f;
-
-    //int currentSlams;
-
-    int currentSlams = 7;
+    private int remainingSlams;
+    private bool hasLaunched;
     public bool isSlamming;
-    bool isGrounded;
-
-    //[SerializeField] private float maxUpwardSpeed = 80f;
-    //[SerializeField] private float maxDownwardSpeed = -12f;
-    //[SerializeField] float maxHeight = 25f;
-    //[SerializeField] float verticalDampening = .35f;
 
     void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
+        rb.gravityScale = 3f;
+        rb.interpolation = RigidbodyInterpolation2D.Interpolate;
     }
-    public void Start()
+    void Start()
     {
-        //rb.simulated = false;
-        rb.gravityScale = 0f;
-        rb.velocity = Vector2.zero;
-        rb.constraints = RigidbodyConstraints2D.FreezeAll;
+        remainingSlams = maxSlams;
     }
 
-    private void Update()
+     void FixedUpdate()
     {
-        if(state == PlayerState.Idle) 
+        ClampCeiling();
+    }
+
+    void Update()
+    {
+        if (!hasLaunched && Input.GetMouseButtonDown(0))
         {
-            HandleLaunchCharge();
-            return; 
+            Launch();
+            return;
         }
-
-        HandleSlamInput();
-    }
-
-    void HandleSlamInput()
-    {
-        if (Input.GetMouseButtonDown(0)) 
+        if (hasLaunched && !isSlamming && remainingSlams > 0 && Input.GetMouseButtonDown(0))
         {
-            TrySlam();
+            Slam();
         }
     }
-    private void FixedUpdate()
+    private void Launch()
     {
-        if (state != PlayerState.Running) { return; }
+        hasLaunched = true;
+        remainingSlams = maxSlams;
 
-        MaintainForwardMotion();
-        ApplyAirDrag();
-    }
-
-    void HandleLaunchCharge()
-    {
-        
-
-        if (Input.GetMouseButtonDown(0))
-        {
-            isCharging = true;
-            currentCharge = minLaunchForce;
-        }
-
-        if (isCharging && Input.GetMouseButtonDown(0))
-        {
-            currentCharge += (maxLaunchForce - minLaunchForce) * (Time.deltaTime / chargeTimeToMax);
-            
-            currentCharge = Mathf.Clamp(currentCharge, minLaunchForce, maxLaunchForce);
-        }
-
-        if (isCharging && Input.GetMouseButtonUp(0))
-        {
-            isCharging = false;
-            StartRunWithForce(currentCharge);
-        }
-    }
-
-    void StartRunWithForce(float force)
-    {
-        if (state != PlayerState.Idle) { return; }
-
-        currentSlams = maxSlams;
-
-        state = PlayerState.Running;
-
-        rb.constraints = RigidbodyConstraints2D.None;
-        rb.gravityScale = 1f;
         rb.velocity = Vector2.zero;
 
-        float angleRad = launchAngleDegrees * Mathf.Deg2Rad;
-        Vector2 launchDir = new Vector2( Mathf.Cos(angleRad), Mathf.Sin(angleRad)).normalized;
+        float rad = launchAngle * Mathf.Deg2Rad;
+        Vector2 launchDir = new(Mathf.Cos(rad), Mathf.Sin(rad));
 
-        Physics2D.SyncTransforms();
-        //Apply impulse
-        rb.AddForce(launchDir * force, ForceMode2D.Impulse);
-
-        rb.velocity = new Vector2(baseForwardSpeed, rb.velocity.y);
+        rb.AddForce(launchDir * launchForce, ForceMode2D.Impulse);
     }
 
-    void MaintainForwardMotion()
+    private void Slam()
     {
-        //Preserving vertical velocity
-        rb.velocity = new Vector2(baseForwardSpeed, rb.velocity.y);
-    }
-
-    void ApplyAirDrag()
-    {
-        if (rb.velocity.y != 0f)
-        {
-            rb.velocity = new Vector2 ( rb.velocity.x, rb.velocity.y * (1f - airDrag * Time.fixedDeltaTime));
-        }
-    }
-
-    void TrySlam()
-    {
-        if (currentSlams <= 0) { return; }
-
-        if(isGrounded) { return; }
-
-        Debug.Log("Slam activating");
-
-        currentSlams--;
+        Debug.Log("Slam is being called");
         isSlamming = true;
+        remainingSlams--;
 
         rb.velocity = new Vector2(rb.velocity.x, 0f);
         rb.AddForce(Vector2.down * slamForce, ForceMode2D.Impulse);
-
     }
 
-    void OnTriggerEnter2D(Collider2D other)
+    private void ClampCeiling()
     {
-        if (!other.CompareTag("Ceiling")){ return; }
+        if (transform.position.y <= maxHeight) { return; }
+
+        transform.position = new Vector3(transform.position.x, maxHeight, transform.position.z);
 
         if (rb.velocity.y > 0f)
         {
-            rb.velocity = new Vector2(rb.velocity.x, -rb.velocity.y * ceilingBounceDampening);
+            rb.velocity = new Vector2(rb.velocity.x, 0f);
         }
     }
-
-    void OnCollisionEnter2D(Collision2D collision)
+    private void OnTriggerEnter2D(Collider2D other)
     {
-        if (collision.collider.CompareTag("Ground"))
+        if (!isSlamming) { return; }
+
+        if (other.CompareTag("Enemy"))
         {
-            isGrounded = true;
-
-            if (isSlamming)
-            {
-                HandleGroundBounce(collision);
-            }
+            Bounce();
         }
-        HandleGroundBounce(collision);
     }
-
-    private void OnCollisionExit2D(Collision2D collision)
+    private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.collider.CompareTag("Ground"))
+        if (!isSlamming){ return; }
+
+        if (collision.collider.CompareTag("Ground")) 
         {
-            isGrounded = false;
-        }
+        }Bounce();
     }
 
-    void HandleGroundBounce(Collision2D collision)
+    private void Bounce()
     {
         isSlamming = false;
 
-        float impactSpeed = Mathf.Abs(rb.velocity.y);
-        
-        float bounceForce = Mathf.Max(impactSpeed * groundBounceMultiplier, minGroundBounceForce);
-
-        rb.velocity = new Vector2(rb.velocity.x, 0f);
+        rb.velocity = Vector2.zero;
         rb.AddForce(Vector2.up * bounceForce, ForceMode2D.Impulse);
-    } 
-    public void BounceOffEnemy(Vector2 contactPoint)
-    {
-        
-        if (state != PlayerState.Running) { return; }
 
-        currentSlams = Mathf.Min(currentSlams + 1, maxSlams);
-
-        //Cancelling downward velocity before bounce
-        if (rb.velocity.y < 0f) 
-        {
-            rb.velocity = new Vector2(rb.velocity.x, 0f);
-        }
-
-        Vector2 awayFromEnemy = (Vector2)(transform.position - (Vector3)contactPoint).normalized;
-
-        Vector2 bounceDir = (Vector2.up * upwardBias + awayFromEnemy * (1f - upwardBias)).normalized;
-
-        rb.AddForce(bounceDir * enemyBounceForce, ForceMode2D.Impulse);
+        remainingSlams = Mathf.Min(remainingSlams + 1, maxSlams);
     }
 }

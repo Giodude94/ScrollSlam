@@ -46,7 +46,7 @@ public class EnemySpawner : MonoBehaviour
     
     float RandomSpawnRangeX()
     {
-        float SpawDistanceX=  Random.Range(minX, maxX);
+        float SpawDistanceX =  Random.Range(minX, maxX);
         //Debug.Log(SpawDistanceX.ToString());
         return SpawDistanceX;
     }

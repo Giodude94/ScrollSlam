@@ -260,10 +260,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 76ea6db9ff9fdca4d9e3616e1bcb4c43, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  chunkPrefab: {fileID: 4437663251132745902, guid: 72bca222003f86d488e5d0a5fdc63081, type: 3}
-  initialChunks: 5
   player: {fileID: 1957486873}
-  maxChunksAlive: 5
+  chunkPrefab: {fileID: 4437663251132745902, guid: 72bca222003f86d488e5d0a5fdc63081, type: 3}
+  chunksAhead: 4
+  chunksBehind: 2
+  chunkWidth: 19.2
 --- !u!4 &406895175
 Transform:
   m_ObjectHideFlags: 0
@@ -352,6 +353,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Chunk
       objectReference: {fileID: 0}
+    - target: {fileID: 4437663251132745902, guid: 72bca222003f86d488e5d0a5fdc63081, type: 3}
+      propertyPath: length
+      value: 12.8
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -374,13 +379,29 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
+    - target: {fileID: 3229661360622345210, guid: ca3e9ae8c7938a640b1356da389c0a96, type: 3}
+      propertyPath: m_Constraints
+      value: 4
+      objectReference: {fileID: 0}
     - target: {fileID: 5028374077471316376, guid: ca3e9ae8c7938a640b1356da389c0a96, type: 3}
       propertyPath: maxSlams
       value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 5028374077471316376, guid: ca3e9ae8c7938a640b1356da389c0a96, type: 3}
+      propertyPath: maxHeight
+      value: 5.4
+      objectReference: {fileID: 0}
+    - target: {fileID: 5028374077471316376, guid: ca3e9ae8c7938a640b1356da389c0a96, type: 3}
+      propertyPath: launchAngle
+      value: 45
+      objectReference: {fileID: 0}
+    - target: {fileID: 5028374077471316376, guid: ca3e9ae8c7938a640b1356da389c0a96, type: 3}
+      propertyPath: launchForce
+      value: 30
+      objectReference: {fileID: 0}
+    - target: {fileID: 5028374077471316376, guid: ca3e9ae8c7938a640b1356da389c0a96, type: 3}
       propertyPath: minGroundBounceForce
-      value: 15.11
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 6603798182787006898, guid: ca3e9ae8c7938a640b1356da389c0a96, type: 3}
       propertyPath: m_LocalPosition.x
