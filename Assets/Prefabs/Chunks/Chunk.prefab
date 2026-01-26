@@ -302,7 +302,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   spawnConfig: {fileID: 11400000, guid: 7619fe3132f770948bdea004b5e56ace, type: 2}
-  spawnAreas: []
+  length: 19.2
+  spawnAreas:
+  - {fileID: 1734034888318839685}
+  - {fileID: 404817118447737575}
 --- !u!1 &5045408536495972836
 GameObject:
   m_ObjectHideFlags: 0

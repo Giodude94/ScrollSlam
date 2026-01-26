@@ -357,6 +357,10 @@ PrefabInstance:
       propertyPath: length
       value: 12.8
       objectReference: {fileID: 0}
+    - target: {fileID: 4437663251132745902, guid: 72bca222003f86d488e5d0a5fdc63081, type: 3}
+      propertyPath: spawnAreas.Array.size
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
