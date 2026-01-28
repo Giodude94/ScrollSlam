@@ -302,7 +302,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   spawnConfig: {fileID: 11400000, guid: 7619fe3132f770948bdea004b5e56ace, type: 2}
-  length: 19.2
+  length: 12.8
   spawnAreas:
   - {fileID: 1734034888318839685}
   - {fileID: 404817118447737575}
@@ -371,7 +371,7 @@ BoxCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 1.0684307, y: 0}
+  m_Offset: {x: 1.0684309, y: -0.48341262}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -382,7 +382,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 17.11144, y: 1}
+  m_Size: {x: 17.11144, y: 0.01}
   m_EdgeRadius: 0
 --- !u!114 &1734034888318839685
 MonoBehaviour:

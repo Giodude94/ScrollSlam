@@ -11,9 +11,10 @@ public abstract class EnemyBase : MonoBehaviour
         if (isAlive) { return; }
     }
 
-    protected virtual void OnHitByPlayer()
+    public virtual void OnHitByPlayer()
     {
         if(!isAlive) { return; }
+        
         Die();
     }
     protected virtual void Die()

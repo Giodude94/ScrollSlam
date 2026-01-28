@@ -47,12 +47,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: da088b095d342734f974f49f04458715, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  launchForce: 22
+  launchForce: 30
   launchAngle: 45
   slamForce: 35
   bounceForce: 18
-  maxSlams: 3
-  maxHeight: 25
+  maxSlams: 7
+  maxHeight: 5.4
   isSlamming: 0
 --- !u!50 &3229661360622345210
 Rigidbody2D:

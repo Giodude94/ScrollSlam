@@ -97,8 +97,13 @@ public class PlayerController : MonoBehaviour
 
         if (other.CompareTag("Enemy"))
         {
-            Bounce();
+           EnemyBase enemy = other.GetComponent<EnemyBase>();
+            if (enemy != null)
+            {
+                enemy.OnHitByPlayer();
+            }
         }
+        Bounce();
     }
     private void OnCollisionEnter2D(Collision2D collision)
     {
@@ -106,7 +111,8 @@ public class PlayerController : MonoBehaviour
 
         if (collision.collider.CompareTag("Ground")) 
         {
-        }Bounce();
+            Bounce();
+        }
     }
 
     private void Bounce()
