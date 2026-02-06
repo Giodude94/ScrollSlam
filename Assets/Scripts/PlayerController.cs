@@ -47,11 +47,13 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
+        //Launching on left click down.
         if (!hasLaunched && Input.GetMouseButtonDown(0))
         {
             Launch();
             return;
         }
+        //If player has launched and there are remaining slams && left click is down.
         if (hasLaunched && !isSlamming && remainingSlams > 0 && Input.GetMouseButtonDown(0))
         {
             Slam();
@@ -93,7 +95,8 @@ public class PlayerController : MonoBehaviour
     }
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (!isSlamming) { return; }
+        //This logic only makes the player bounce if they are slamming. Uncommented to make logic occur regardless of slamming.
+        //if (!isSlamming) { return; }
 
         if (other.CompareTag("Enemy"))
         {
@@ -102,8 +105,8 @@ public class PlayerController : MonoBehaviour
             {
                 enemy.OnHitByPlayer();
             }
+            Bounce();
         }
-        Bounce();
     }
     private void OnCollisionEnter2D(Collision2D collision)
     {
