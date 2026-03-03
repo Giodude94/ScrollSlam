@@ -52,6 +52,7 @@ MonoBehaviour:
   slamForce: 35
   bounceForce: 18
   maxSlams: 7
+  groundHorizontalMultiplier: 0.2
   maxHeight: 5.4
   isSlamming: 0
 --- !u!50 &3229661360622345210
@@ -68,7 +69,7 @@ Rigidbody2D:
   m_UseAutoMass: 0
   m_Mass: 1
   m_LinearDrag: 0
-  m_AngularDrag: 0.05
+  m_AngularDrag: 0
   m_GravityScale: 1
   m_Material: {fileID: 0}
   m_IncludeLayers:

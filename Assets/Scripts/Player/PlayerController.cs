@@ -20,11 +20,16 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float bounceForce = 18f;
     [SerializeField] private int maxSlams = 3;
 
+    [Header("Ground Slam Penalty")]
+    [SerializeField] private float groundHorizontalMultiplier = 0.2f;
+
+
     [Header("Limits")]
     [SerializeField] private float maxHeight = 25f;
 
     private Rigidbody2D rb;
 
+    private float slamStartHorizontalVelocity;
     private int remainingSlams;
     private bool hasLaunched;
     public bool isSlamming;
@@ -58,6 +63,8 @@ public class PlayerController : MonoBehaviour
         {
             Slam();
         }
+
+        CheckFailCondition();
     }
     private void Launch()
     {
@@ -70,6 +77,8 @@ public class PlayerController : MonoBehaviour
         Vector2 launchDir = new(Mathf.Cos(rad), Mathf.Sin(rad));
 
         rb.AddForce(launchDir * launchForce, ForceMode2D.Impulse);
+
+        GameManager.Instance.StartRun();
     }
 
     private void Slam()
@@ -77,6 +86,8 @@ public class PlayerController : MonoBehaviour
         Debug.Log("Slam is being called");
         isSlamming = true;
         remainingSlams--;
+
+        slamStartHorizontalVelocity = rb.velocity.x;
 
         rb.velocity = new Vector2(rb.velocity.x, 0f);
         rb.AddForce(Vector2.down * slamForce, ForceMode2D.Impulse);
@@ -105,7 +116,7 @@ public class PlayerController : MonoBehaviour
             {
                 enemy.OnHitByPlayer();
             }
-            Bounce();
+            Bounce(true);
         }
     }
     private void OnCollisionEnter2D(Collision2D collision)
@@ -114,17 +125,37 @@ public class PlayerController : MonoBehaviour
 
         if (collision.collider.CompareTag("Ground")) 
         {
-            Bounce();
+            Debug.Log("Bounced on Ground");
+            Bounce(false);
         }
     }
 
-    private void Bounce()
+    private void Bounce(bool hitEnemy)
     {
         isSlamming = false;
 
-        rb.velocity = Vector2.zero;
+        float currentX = slamStartHorizontalVelocity;
+
+        if (!hitEnemy)
+        {
+            currentX *= groundHorizontalMultiplier;
+        }
+
+        rb.velocity = new Vector2(currentX,0f);
         rb.AddForce(Vector2.up * bounceForce, ForceMode2D.Impulse);
 
         remainingSlams = Mathf.Min(remainingSlams + 1, maxSlams);
+    }
+
+    private void CheckFailCondition()
+    {
+        if (!hasLaunched) {  return; }
+
+        if (GameManager.Instance.CurrentState != GameManager.GameState.Running) {  return; }
+
+        if (Mathf.Abs(rb.velocity.x) <= .01f)
+        {
+            GameManager.Instance.GameOver();
+        }
     }
 }
