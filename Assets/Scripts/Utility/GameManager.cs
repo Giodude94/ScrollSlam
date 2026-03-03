@@ -4,15 +4,25 @@ using UnityEngine.SceneManagement;
 using UnityEngine;
 using Unity.VisualScripting;
 using TMPro.EditorUtilities;
+using System.Transactions;
 
 public class GameManager : MonoBehaviour
 {
 
     public static GameManager Instance;
 
+    [Header("UI")]
+    [SerializeField] private GameObject gameOverPanel;
+
+    private float score;
+    private float bestScore;
+
+    public float Score => score;
+    public float BestScore => bestScore;
+
     public enum GameState
     {
-        Idle,
+        WaitingToStart,
         Running,
         GameOver
     }
@@ -21,43 +31,58 @@ public class GameManager : MonoBehaviour
 
     private void Awake()
     {
-        if (Instance != null)
-        {
-            Destroy(gameObject);
-            return;
-        }
-
         Instance = this;
-        DontDestroyOnLoad(gameObject);
     }
 
     private void Start()
     {
-        SetState(GameState.Idle);
+        CurrentState = GameState.WaitingToStart;
+        
+        if (gameOverPanel != null)
+        {
+            gameOverPanel.SetActive(false);
+        }
+
+        bestScore = PlayerPrefs.GetFloat("BestScore", 0f);
+    }
+
+    private void Update()
+    {
+        if (CurrentState == GameState.Running) 
+        {
+            score += Time.deltaTime;
+        }
     }
 
     public void StartRun()
     {
-        SetState(GameState.Running);
-        ScoreManager.Instance.StartScoring();
+        score = 0f;
+        CurrentState = GameState.Running;
     }
 
     public void GameOver()
     {
-        if (CurrentState == GameState.GameOver) { return; }
+        if (CurrentState == GameState.GameOver)
+        {
+            return;
+        }
 
-        SetState(GameState.GameOver);
-        ScoreManager.Instance.StopScoring();
-        UIManager.Instance.ShowGameOver();
+        CurrentState = GameState.GameOver;
+
+        if (score > bestScore) 
+        {
+            bestScore = score;
+            PlayerPrefs.SetFloat("BestScore", bestScore);
+        }
+
+        if (gameOverPanel != null)
+        {
+            gameOverPanel.SetActive(true);
+        }
     }
 
     public void Replay()
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
-    }
-
-    private void SetState(GameState newState)
-    {
-        CurrentState = newState;
     }
 }

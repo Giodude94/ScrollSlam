@@ -52,6 +52,10 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
+        Debug.Log(GameManager.Instance.CurrentState);
+        //If the game is over then the inputs of the player should not be valid.
+        if (GameManager.Instance.CurrentState == GameManager.GameState.GameOver) { return; }
+        
         //Launching on left click down.
         if (!hasLaunched && Input.GetMouseButtonDown(0))
         {
