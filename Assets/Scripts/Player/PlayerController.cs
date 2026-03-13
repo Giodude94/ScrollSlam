@@ -110,8 +110,8 @@ public class PlayerController : MonoBehaviour
     }
     private void OnTriggerEnter2D(Collider2D other)
     {
-        //This logic only makes the player bounce if they are slamming. Uncommented to make logic occur regardless of slamming.
-        //if (!isSlamming) { return; }
+        //If the current gamestate is not currently running the game then we return and do not execute logic.
+        if (GameManager.Instance.CurrentState != GameManager.GameState.Running) { return; }
 
         if (other.CompareTag("Enemy"))
         {
@@ -157,7 +157,7 @@ public class PlayerController : MonoBehaviour
 
         if (GameManager.Instance.CurrentState != GameManager.GameState.Running) {  return; }
 
-        if (Mathf.Abs(rb.velocity.x) <= .01f)
+        if (Mathf.Abs(rb.velocity.x) <= .0f)
         {
             GameManager.Instance.GameOver();
         }

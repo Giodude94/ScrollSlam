@@ -7,20 +7,42 @@ public class UIManager : MonoBehaviour
 {
     public static UIManager Instance;
 
-    [SerializeField] private TMP_Text scoreText;
+    [Header("Score UI")]
+    [SerializeField] private TextMeshProUGUI scoreText;
+    [SerializeField] private TextMeshProUGUI bestScoreText;
+
+    [Header("Panels")]
     [SerializeField] private GameObject gameOverPanel;
 
-    private void Awake()
-    {
-        Instance = this;
-    }
 
     private void Start()
     {
-        gameOverPanel.SetActive(false);
-        UpdateScore(0);
+        if (gameOverPanel != null)
+        {
+            gameOverPanel.SetActive(false);
+        }
+        
     }
 
+    private void Update()
+    {
+        if (GameManager.Instance == null) 
+        {
+            return;
+        }
+
+        scoreText.text = "Current Score: " + Mathf.FloorToInt(GameManager.Instance.Score).ToString();
+
+        bestScoreText.text = "Best: " + Mathf.FloorToInt(GameManager.Instance.BestScore).ToString();
+
+        if(GameManager.Instance.CurrentState == GameManager.GameState.GameOver)
+        {
+            if (!gameOverPanel.activeSelf)
+            {
+                gameOverPanel.SetActive(true);
+            }
+        }
+    }
     public void UpdateScore(int score)
     {
         scoreText.text = score.ToString();

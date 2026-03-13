@@ -45,4 +45,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   scoreText: {fileID: 0}
+  bestScoreText: {fileID: 0}
   gameOverPanel: {fileID: 0}
