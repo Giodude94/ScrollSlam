@@ -113,15 +113,17 @@ public class PlayerController : MonoBehaviour
         //If the current gamestate is not currently running the game then we return and do not execute logic.
         if (GameManager.Instance.CurrentState != GameManager.GameState.Running) { return; }
 
-        if (other.CompareTag("Enemy"))
-        {
-           EnemyBase enemy = other.GetComponent<EnemyBase>();
-            if (enemy != null)
+        if(!other.CompareTag("Enemy")) {  return; }
+
+        EnemyBase enemy = other.GetComponent<EnemyBase>();
+
+        if (enemy != null)
             {
                 enemy.OnHitByPlayer();
             }
-            Bounce(true);
-        }
+        
+        Bounce(true);
+
     }
     private void OnCollisionEnter2D(Collision2D collision)
     {
@@ -136,9 +138,18 @@ public class PlayerController : MonoBehaviour
 
     private void Bounce(bool hitEnemy)
     {
-        isSlamming = false;
+        float currentX;
 
-        float currentX = slamStartHorizontalVelocity;
+        if (isSlamming)
+        {
+            currentX = slamStartHorizontalVelocity;
+        }
+        else
+        {
+            currentX = rb.velocity.x;
+        }
+
+        isSlamming = false;
 
         if (!hitEnemy)
         {
@@ -148,7 +159,7 @@ public class PlayerController : MonoBehaviour
         rb.velocity = new Vector2(currentX,0f);
         rb.AddForce(Vector2.up * bounceForce, ForceMode2D.Impulse);
 
-        remainingSlams = Mathf.Min(remainingSlams + 1, maxSlams);
+        remainingSlams = Mathf.Min(remainingSlams, maxSlams);
     }
 
     private void CheckFailCondition()
