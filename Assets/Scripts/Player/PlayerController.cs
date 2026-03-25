@@ -173,4 +173,7 @@ public class PlayerController : MonoBehaviour
             GameManager.Instance.GameOver();
         }
     }
+
+    public int GetCurrentJump(){ return remainingSlams; }
+    public int GetMaxJump() { return maxSlams; }
 }

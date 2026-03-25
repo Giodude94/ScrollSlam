@@ -19,5 +19,5 @@ MonoBehaviour:
     maxCount: 40
   - enemyType: 1
     prefab: {fileID: 106447173046254976, guid: 4c14f515b0f9b0c479c46a225c2c2750, type: 3}
-    minCount: 0
-    maxCount: 0
+    minCount: 10
+    maxCount: 15
