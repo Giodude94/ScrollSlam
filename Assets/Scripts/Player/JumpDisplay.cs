@@ -17,15 +17,17 @@ public class JumpDisplay : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        //Using Getters from Player controllers to obtain jump values used in logic.
         currJump = playerController.GetCurrentJump();
         maxJump = playerController.GetMaxJump();
 
+        
         //Will create visible icons based on the max number of jumps.
         for (int i = 0; i < jumps.Length; i++) 
         {
             if (i < currJump)
             {
-                jumps[i].sprite = activeJump;
+                jumps[currJump].sprite = activeJump;
             }
             else
             {
@@ -39,6 +41,6 @@ public class JumpDisplay : MonoBehaviour
             {
                 jumps[i].enabled = false;
             }
-        }   
+        }  
     }
 }
