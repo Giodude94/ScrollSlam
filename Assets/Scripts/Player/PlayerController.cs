@@ -19,6 +19,8 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float slamForce = 40f;
     [SerializeField] private float bounceForce = 18f;
     [SerializeField] private int maxSlams = 3;
+    [SerializeField] private float slamRefillCharge;
+    [SerializeField] private float slamRefillThreshold = 100f;
 
     [Header("Ground Slam Penalty")]
     [SerializeField] private float groundHorizontalMultiplier = 0.2f;
@@ -44,15 +46,14 @@ public class PlayerController : MonoBehaviour
     {
         remainingSlams = maxSlams;
     }
-
-     void FixedUpdate()
+    void FixedUpdate()
     {
         ClampCeiling();
     }
-
     void Update()
     {
         Debug.Log(GameManager.Instance.CurrentState);
+
         //If the game is over then the inputs of the player should not be valid.
         if (GameManager.Instance.CurrentState == GameManager.GameState.GameOver) { return; }
         
@@ -84,7 +85,6 @@ public class PlayerController : MonoBehaviour
 
         GameManager.Instance.StartRun();
     }
-
     private void Slam()
     {
         Debug.Log("Slam is being called");
@@ -96,7 +96,6 @@ public class PlayerController : MonoBehaviour
         rb.velocity = new Vector2(rb.velocity.x, 0f);
         rb.AddForce(Vector2.down * slamForce, ForceMode2D.Impulse);
     }
-
     private void ClampCeiling()
     {
         if (transform.position.y <= maxHeight) { return; }
@@ -135,7 +134,6 @@ public class PlayerController : MonoBehaviour
             Bounce(false);
         }
     }
-
     private void Bounce(bool hitEnemy)
     {
         float currentX;
@@ -161,7 +159,6 @@ public class PlayerController : MonoBehaviour
 
         remainingSlams = Mathf.Min(remainingSlams, maxSlams);
     }
-
     private void CheckFailCondition()
     {
         if (!hasLaunched) {  return; }
@@ -173,7 +170,14 @@ public class PlayerController : MonoBehaviour
             GameManager.Instance.GameOver();
         }
     }
-
-    public int GetCurrentJump(){ return remainingSlams; }
+    private void SlamRechargeCheck()
+    {
+        while (slamRefillCharge >= slamRefillThreshold)
+        {
+            slamRefillCharge -= slamRefillThreshold;
+            remainingSlams++;
+        }
+    }
+    public int GetCurrentJump() { return remainingSlams; }
     public int GetMaxJump() { return maxSlams; }
 }
