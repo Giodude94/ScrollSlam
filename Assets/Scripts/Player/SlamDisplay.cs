@@ -18,6 +18,25 @@ public class SlamDisplay : MonoBehaviour
     [Header("References")]
     public PlayerController playerController;
 
+    private void Awake()
+    {
+        currSlam = playerController.GetCurrentSlam();
+        maxSlam = playerController.GetMaxSlam();
+
+        //Running enable and disable in awake in order to differentiate similar logic in Update function calls.
+        for (int i = jumps.Length - 1; i >= 0; i--)
+        {
+            if (i >= jumps.Length - maxSlam)
+            {
+                jumps[i].enabled = true;
+            }
+            else
+            {
+                jumps[i].enabled = false;
+            }
+        }
+
+    }
     // Update is called once per frame
     void Update()
     {
@@ -26,53 +45,34 @@ public class SlamDisplay : MonoBehaviour
         maxSlam = playerController.GetMaxSlam();
         float currSlamRechargeValue = playerController.GetSlamFillCharge();
 
-        Debug.Log($"Current Slam: {currSlam} Max Slam: {maxSlam} \n Current Slam Refill Value: {currSlamRechargeValue} Threshold value: {playerController.GetThresholdValue()}");
+       // Debug.Log($"Current Slam: {currSlam} Max Slam: {maxSlam} \n Current Slam Refill Value: {currSlamRechargeValue} Threshold value: {playerController.GetThresholdValue()}");
 
-        //Will update jump icons to deplete in desired top-down order.
-        if (currSlam < maxSlam) 
-        { 
-            jumps[maxSlam - currSlam - 1].sprite = inactiveJump;
-            jumps[maxSlam - currSlam - 1].fillAmount = 0f;
-        }
-        else if(currSlam > maxSlam)
-        {
-            jumps[maxSlam - currSlam].fillAmount = 0f;
-        }
-
-        //Code will not run when curr jump is equal to max jump. ie. when the slam gauge is full
-        if(currSlam <= maxSlam)
-        {
-            if (playerController.GetSlamFillCharge() > 0)
-            {
-                jumps[maxSlam - currSlam - 1].fillAmount = playerController.GetSlamFillCharge();
-            }
-        }
-
+        
         //Will create visible icons based on the max number of jumps.
-        for (int i = 0; i < jumps.Length; i++)
-        {   
-            if (i < maxSlam)
-            {
-                jumps[i].enabled = true;
-                if (i < currSlam + 1)
-                {
-                    Debug.Log($"index is: {i}");
+        for (int i = jumps.Length - 1 ; i >= 0 ; i--)
+        {
+            Debug.Log($"index is :{i} \n Jumps.Length - (maxSlam - currSlam): {jumps.Length - (maxSlam - currSlam + 1)}");
 
-                }
+            //For items that are greater than one directly above the current jump we set the jump to inactive and fill to 100.
+            
+            //This is one ahead of the current slam
+            
+            if (i > jumps.Length - (maxSlam - currSlam + 1))
+            {
+                jumps[i].sprite = inactiveJump;
+                jumps[i].fillAmount = 0f;
             }
             else
             {
-                jumps[i].enabled = false;
+               jumps[i].sprite = activeJump;
+               jumps[i].fillAmount = 100f;
             }
-           //if ( i > currSlam)
-            //{
-             //   Debug.Log($"index is: {i}");
-            //}
-            //if (jumps[i] != jumps[maxSlam - currSlam]) 
-            //{
-            //    jumps[maxSlam - currSlam - 1].sprite = inactiveJump;
-            //    jumps[maxSlam - currSlam - 1].fillAmount = 0f;
-            //}
+            if (i == jumps.Length - (maxSlam - currSlam))
+            {
+                Debug.Log(i);
+                jumps[i].fillAmount = currSlamRechargeValue;
+            }
+
         }
     }
 

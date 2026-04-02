@@ -568,15 +568,15 @@ MonoBehaviour:
   inactiveJump: {fileID: 1031413459, guid: 56c986b30a4f11f4ca62b31386522b75, type: 3}
   activeJump: {fileID: 1031413459, guid: 9822907f2ea397e4b890fd1af000f19f, type: 3}
   jumps:
-  - {fileID: 1544033468}
-  - {fileID: 1381626318}
-  - {fileID: 2107853148}
-  - {fileID: 1168353430}
-  - {fileID: 212150130}
-  - {fileID: 809755330}
-  - {fileID: 343247277}
-  - {fileID: 1526876595}
   - {fileID: 609419571}
+  - {fileID: 1526876595}
+  - {fileID: 343247277}
+  - {fileID: 809755330}
+  - {fileID: 212150130}
+  - {fileID: 1168353430}
+  - {fileID: 2107853148}
+  - {fileID: 1381626318}
+  - {fileID: 1544033468}
   playerController: {fileID: 1957486877}
 --- !u!114 &2107853148 stripped
 MonoBehaviour:
