@@ -5,7 +5,7 @@ using UnityEngine;
 public abstract class EnemyBase : MonoBehaviour
 {
     protected bool isAlive = true;
-    public float jumpChargeValue = .25f;
+    public float slamChargeValue = .25f;
 
     protected virtual void Update()
     {

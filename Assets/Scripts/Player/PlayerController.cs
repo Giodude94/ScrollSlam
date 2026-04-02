@@ -20,7 +20,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float bounceForce = 18f;
     [SerializeField] private int maxSlams = 3;
     [SerializeField] private float slamRefillCharge;
-    [SerializeField] private float slamRefillThreshold = 100f;
+    [SerializeField] private float slamRefillThreshold = 1f;
 
     [Header("Ground Slam Penalty")]
     [SerializeField] private float groundHorizontalMultiplier = 0.2f;
@@ -69,7 +69,8 @@ public class PlayerController : MonoBehaviour
             Slam();
         }
 
-        CheckFailCondition();
+        //CheckFailCondition();
+        SlamRechargeCheck();
     }
     private void Launch()
     {
@@ -89,6 +90,7 @@ public class PlayerController : MonoBehaviour
     {
         Debug.Log("Slam is being called");
         isSlamming = true;
+        
         remainingSlams--;
 
         slamStartHorizontalVelocity = rb.velocity.x;
@@ -116,10 +118,17 @@ public class PlayerController : MonoBehaviour
 
         EnemyBase enemy = other.GetComponent<EnemyBase>();
 
+        //We are interacting with the enemy
+        //One slam kills enemies, therefore we are calling the subsequent charge logic here.
         if (enemy != null)
+        {
+            enemy.OnHitByPlayer();
+            if (maxSlams != remainingSlams) 
             {
-                enemy.OnHitByPlayer();
+                slamRefillCharge += enemy.slamChargeValue;
             }
+            
+        }
         
         Bounce(true);
 
@@ -176,8 +185,11 @@ public class PlayerController : MonoBehaviour
         {
             slamRefillCharge -= slamRefillThreshold;
             remainingSlams++;
+            //Mathf.Clamp(remainingSlams, 0, maxSlams);
         }
     }
-    public int GetCurrentJump() { return remainingSlams; }
-    public int GetMaxJump() { return maxSlams; }
+    public int GetCurrentSlam() { return remainingSlams; }
+    public int GetMaxSlam() { return maxSlams; }
+    public float GetSlamFillCharge() { return slamRefillCharge; }
+    public float GetThresholdValue() { return slamRefillThreshold; }
 }

@@ -91,7 +91,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0bafb8e5a3fcd784a8187f2f57baa1a1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  jumpChargeValue: 0.02
+  slamChargeValue: 0.02
   moveSpeed: 3
 --- !u!1 &8079984526216344366
 GameObject:
