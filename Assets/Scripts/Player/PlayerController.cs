@@ -18,7 +18,7 @@ public class PlayerController : MonoBehaviour
     [Header("Slam")]
     [SerializeField] private float slamForce = 40f;
     [SerializeField] private float bounceForce = 18f;
-    [SerializeField] private int maxSlams = 3;
+    [SerializeField][Range(1,10)] private int maxSlams = 3;
     [SerializeField] private float slamRefillCharge;
     [SerializeField] private float slamRefillThreshold = 1f;
 

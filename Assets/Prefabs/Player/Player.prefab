@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6603798182787006898}
   - component: {fileID: 5028374077471316376}
+  - component: {fileID: 6083935073869359672}
   - component: {fileID: 3229661360622345210}
   - component: {fileID: 5172945024959992287}
   - component: {fileID: 1215204813866298286}
@@ -51,10 +52,40 @@ MonoBehaviour:
   launchAngle: 45
   slamForce: 35
   bounceForce: 18
-  maxSlams: 7
+  maxSlams: 6
+  slamRefillCharge: 0
+  slamRefillThreshold: 1
   groundHorizontalMultiplier: 0.2
-  maxHeight: 5.4
+  maxHeight: 18.3
   isSlamming: 0
+--- !u!114 &6083935073869359672
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3201690805585114297}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb3c616ecb2d99645be7040ec0056faa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  currSlam: 0
+  maxSlam: 0
+  inactiveJump: {fileID: 1031413459, guid: 56c986b30a4f11f4ca62b31386522b75, type: 3}
+  activeJump: {fileID: 1031413459, guid: 9822907f2ea397e4b890fd1af000f19f, type: 3}
+  jumps:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  playerController: {fileID: 5028374077471316376}
 --- !u!50 &3229661360622345210
 Rigidbody2D:
   serializedVersion: 4
