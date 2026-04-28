@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
@@ -8,7 +9,7 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody2D))]
 [RequireComponent(typeof(Collider2D))]
 
-
+ 
 public class PlayerController : MonoBehaviour
 {
     [Header("Launch")]
@@ -18,7 +19,9 @@ public class PlayerController : MonoBehaviour
     [Header("Slam")]
     [SerializeField] private float slamForce = 40f;
     [SerializeField] private float bounceForce = 18f;
-    [SerializeField][Range(1,10)] private int maxSlams = 3;
+    [SerializeField]
+    [Range(1,10)]
+    private int maxSlams = 3;
     [SerializeField] private float slamRefillCharge;
     [SerializeField] private float slamRefillThreshold = 1f;
 
@@ -28,6 +31,10 @@ public class PlayerController : MonoBehaviour
 
     [Header("Limits")]
     [SerializeField] private float maxHeight = 25f;
+
+    [Header("API Stats")]
+    int slamCount = 0;
+    string sessionId;
 
     private Rigidbody2D rb;
 
@@ -69,7 +76,7 @@ public class PlayerController : MonoBehaviour
             Slam();
         }
 
-        //CheckFailCondition();
+        CheckFailCondition();
         SlamRechargeCheck();
     }
     private void Launch()
@@ -88,6 +95,7 @@ public class PlayerController : MonoBehaviour
     }
     private void Slam()
     {
+
         Debug.Log("Slam is being called");
         isSlamming = true;
         
@@ -97,7 +105,11 @@ public class PlayerController : MonoBehaviour
 
         rb.velocity = new Vector2(rb.velocity.x, 0f);
         rb.AddForce(Vector2.down * slamForce, ForceMode2D.Impulse);
+
+        slamCount++;
+        SendSlamEvent();
     }
+
     private void ClampCeiling()
     {
         if (transform.position.y <= maxHeight) { return; }
@@ -187,6 +199,23 @@ public class PlayerController : MonoBehaviour
             remainingSlams++;
             //Mathf.Clamp(remainingSlams, 0, maxSlams);
         }
+    }
+    private void SendSlamEvent()
+    {
+        GameEvent e = new GameEvent
+        {
+            playerId = "player1",
+            sessionId = sessionId, 
+            eventType = "slams",
+            slams = slamCount,
+            x = transform.position.x,
+            y = transform.position.y,
+            timestamp = System.DateTime.UtcNow.ToString("o"),
+         };
+
+        string json = JsonUtility.ToJson(e);
+
+        ApiClient.Instance.SendEvent(json);
     }
     public int GetCurrentSlam() { return remainingSlams; }
     public int GetMaxSlam() { return maxSlams; }

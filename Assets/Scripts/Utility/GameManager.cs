@@ -5,6 +5,7 @@ using UnityEngine;
 using Unity.VisualScripting;
 using TMPro.EditorUtilities;
 using System.Transactions;
+using System;
 
 public class GameManager : MonoBehaviour
 {
@@ -79,10 +80,20 @@ public class GameManager : MonoBehaviour
         {
             gameOverPanel.SetActive(true);
         }
+
+        SendScoreEvent();
     }
 
     public void Replay()
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+    }
+    private void SendScoreEvent()
+    {
+        GameEvent e = new GameEvent 
+        {
+            //playerId = ,
+            //sessionId = 
+        };
     }
 }
