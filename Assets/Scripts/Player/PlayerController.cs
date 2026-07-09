@@ -26,7 +26,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float slamRefillThreshold = 1f;
 
     [Header("Ground Slam Penalty")]
-    [SerializeField] private float groundHorizontalMultiplier = 0.2f;
+    [SerializeField] private float groundHorizontalMultiplier = 0.5f;
 
 
     [Header("Limits")]
@@ -38,6 +38,7 @@ public class PlayerController : MonoBehaviour
 
     private Rigidbody2D rb;
 
+    [SerializeField] private float successfulSlamModifier;
     private float slamStartHorizontalVelocity;
     private int remainingSlams;
     private bool hasLaunched;
@@ -161,20 +162,26 @@ public class PlayerController : MonoBehaviour
 
         if (isSlamming)
         {
-            currentX = slamStartHorizontalVelocity;
+            Debug.Log("Hit enemy while slamming.");
+            //Multiplying horizontal velocity by value to increase speed.
+            currentX = slamStartHorizontalVelocity * successfulSlamModifier;
         }
         else
         {
+            Debug.Log("Hit enemy NOT while slamming.");
+            //If we are not slamming then the force should stay the same if bouncing on an enemy.
             currentX = rb.velocity.x;
-        }
+        } 
 
         isSlamming = false;
 
         if (!hitEnemy)
         {
+            //Slows down when the player slams on the ground.
             currentX *= groundHorizontalMultiplier;
         }
 
+        //
         rb.velocity = new Vector2(currentX,0f);
         rb.AddForce(Vector2.up * bounceForce, ForceMode2D.Impulse);
 
@@ -186,7 +193,8 @@ public class PlayerController : MonoBehaviour
 
         if (GameManager.Instance.CurrentState != GameManager.GameState.Running) {  return; }
 
-        if (Mathf.Abs(rb.velocity.x) <= .0f)
+        //If x and y velocity are 0 then the game is over. The player cannot bounce anymore.
+        if (Mathf.Abs(rb.velocity.x) <= .0f  & Mathf.Abs(rb.velocity.y) <= .0f)
         {
             GameManager.Instance.GameOver();
         }
@@ -204,8 +212,8 @@ public class PlayerController : MonoBehaviour
     {
         GameEvent e = new GameEvent
         {
-            playerId = "player1",
-            sessionId = sessionId, 
+            playerId = ApiClient.Instance.playerID,
+            sessionId = ApiClient.Instance.sessionID, 
             eventType = "slams",
             slams = slamCount,
             x = transform.position.x,

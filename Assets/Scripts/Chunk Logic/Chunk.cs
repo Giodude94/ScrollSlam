@@ -27,23 +27,70 @@ public class Chunk : MonoBehaviour
     }
     void SpawnEnemies()
     {
-        if (spawnConfig == null || spawnAreas.Length == 0) { return; }
+        Debug.Log("Calling SpawnEnemies script.");
 
-        foreach (var entry in spawnConfig.entries)
-        {
-            int count = UnityEngine.Random.Range(entry.minCount, entry.maxCount + 1);
+        //Checking Edge Cases
+        if (spawnConfig == null || spawnAreas.Length == 0) { Debug.Log("SpawnConfig is empty or length is 0"); return; }
+        
+        //For weighted spawning
+        int enemyCount = UnityEngine.Random.Range(spawnConfig.minEnemies, spawnConfig.maxEnemies + 1);
 
-            for (int i = 0; i < count; i++)
+            for (int i = 0; i < enemyCount; i++)
             {
+                EnemySpawnEntry entry = GetWeightedEnemy();
+
+                if (entry == null)
+                {
+                    continue;
+                }   
                 SpawnArea area = GetSpawnArea(entry.enemyType);
+
                 if (area == null) { continue; }
 
                 Vector3 spawnPos = area.GetRandomPoint();
-                Instantiate(entry.prefab, spawnPos, Quaternion.identity, transform);
+                
+                Instantiate(
+                    entry.prefab,
+                    spawnPos,
+                    Quaternion.identity,
+                    transform
+                );
+            
             }
-        }
     }
 
+    private EnemySpawnEntry GetWeightedEnemy() 
+    {
+        int totalWeight = 0;
+
+        foreach (EnemySpawnEntry entry in spawnConfig.entries)
+        {
+            Debug.Log(entry.weight);
+            totalWeight += entry.weight;
+        }
+
+        if (totalWeight <= 0) 
+        {
+            Debug.Log("Weight is zero");
+            return null;
+        }
+
+        int randomValue = UnityEngine.Random.Range(0, totalWeight);
+
+        int currentWeight = 0;
+
+        foreach (EnemySpawnEntry entry in spawnConfig.entries) 
+        {   
+            currentWeight += entry.weight;
+
+            if (randomValue < currentWeight)
+            {
+                return entry;
+            }
+        }
+        Debug.Log("Returned Null in chunk.cs script.");
+        return null;
+    }
     private SpawnArea GetSpawnArea(EnemyType type) 
     {
         foreach (var area in spawnAreas) 

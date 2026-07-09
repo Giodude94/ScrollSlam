@@ -51,25 +51,21 @@ public class SlamDisplay : MonoBehaviour
         //Will create visible icons based on the max number of jumps.
         for (int i = jumps.Length - 1 ; i >= 0 ; i--)
         {
-            //Debug.Log($"index is :{i} \n Jumps.Length - (maxSlam - currSlam): {jumps.Length - (maxSlam - currSlam + 1)}");
-
             //For items that are greater than one directly above the current jump we set the jump to inactive and fill to 100.
-            
             //This is one ahead of the current slam
-            
             if (i > jumps.Length - (maxSlam - currSlam + 1))
             {
                 jumps[i].sprite = inactiveJump;
-                jumps[i].fillAmount = 0f;
+                jumps[i].fillAmount = 100f;
             }
             else
             {
                jumps[i].sprite = activeJump;
                jumps[i].fillAmount = 100f;
             }
+            
             if (i == jumps.Length - (maxSlam - currSlam))
             {
-                //Debug.Log(i);
                 jumps[i].fillAmount = currSlamRechargeValue;
             }
 

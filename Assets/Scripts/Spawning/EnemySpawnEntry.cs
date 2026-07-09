@@ -6,7 +6,9 @@ using UnityEngine;
 public class EnemySpawnEntry
 {
     public EnemyType enemyType;
+
     public GameObject prefab;
-    public int minCount;
-    public int maxCount;
+
+    [Header("Weighted Spawn")]
+    public int weight = 1;
 }

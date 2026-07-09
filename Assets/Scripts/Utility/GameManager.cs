@@ -90,10 +90,15 @@ public class GameManager : MonoBehaviour
     }
     private void SendScoreEvent()
     {
-        GameEvent e = new GameEvent 
+        GameEvent e = new GameEvent
         {
-            //playerId = ,
-            //sessionId = 
+            playerId = ApiClient.Instance.playerID,
+            sessionId = ApiClient.Instance.sessionID,
+            eventType = "score_end_of_game",
+            score = (int)score,
+            timestamp = System.DateTime.UtcNow.ToString("o")
         };
+
+        ApiClient.Instance.SendEvent(JsonUtility.ToJson(e));
     }
 }

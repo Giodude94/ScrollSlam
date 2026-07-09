@@ -6,7 +6,11 @@ using System.Text;
 public class ApiClient : MonoBehaviour
 {
     public static ApiClient Instance;
-
+    
+    //Temporary variables used in local testing.
+    public string playerID = "Player1";
+    public string sessionID = "012341234";
+    //Made public for easy editing in inspector.
     public string baseUrl = "http://localhost:5000/api/v1";
 
     void Awake()

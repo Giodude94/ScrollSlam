@@ -464,6 +464,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 70be66ba1f696a945ae2296ad30c35b5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  playerID: Player1
+  sessionID: 012341234
   baseUrl: http://localhost:5232/api/v1
 --- !u!4 &1192965625
 Transform:
@@ -720,8 +722,16 @@ PrefabInstance:
       value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 5028374077471316376, guid: ca3e9ae8c7938a640b1356da389c0a96, type: 3}
+      propertyPath: bounceForce
+      value: 18
+      objectReference: {fileID: 0}
+    - target: {fileID: 5028374077471316376, guid: ca3e9ae8c7938a640b1356da389c0a96, type: 3}
+      propertyPath: successfulSlamModifier
+      value: 1.02
+      objectReference: {fileID: 0}
+    - target: {fileID: 5028374077471316376, guid: ca3e9ae8c7938a640b1356da389c0a96, type: 3}
       propertyPath: groundHorizontalMultiplier
-      value: 0.83
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 6083935073869359672, guid: ca3e9ae8c7938a640b1356da389c0a96, type: 3}
       propertyPath: jumps.Array.data[0]
