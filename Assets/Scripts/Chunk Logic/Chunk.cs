@@ -19,6 +19,12 @@ public class Chunk : MonoBehaviour
     private bool hasSpawned = false;
     private int chunkIndex;
 
+    [Header("Continuous Spawning")]
+    [SerializeField] private float spawnInterval = 2f;
+    [SerializeField] private int maxEnemiesPerChunk = 10;
+
+    private int spawnedEnemies;
+    private Coroutine spawnRoutine;
 
     public void Initialize(int index)
     {
@@ -58,7 +64,25 @@ public class Chunk : MonoBehaviour
             
             }
     }
+    void SpawnEnemy()
+    {
+        EnemySpawnEntry entry = GetWeightedEnemy();
 
+        if (entry == null) { return; }
+
+        SpawnArea area = GetSpawnArea(entry.enemyType );
+
+        if (area == null) { return; }
+
+        Vector3 spawnPos = area.GetRandomPoint();
+
+        Instantiate(
+            entry.prefab,
+            spawnPos,
+            Quaternion.identity,
+            transform
+            );
+    }
     private EnemySpawnEntry GetWeightedEnemy() 
     {
         int totalWeight = 0;
@@ -104,7 +128,18 @@ public class Chunk : MonoBehaviour
     {
         if (hasSpawned) { return; }
 
-        SpawnEnemies();
         hasSpawned = true;
+
+        spawnRoutine = StartCoroutine(SpawnEnemyRoutine());
+    }
+
+    private IEnumerator SpawnEnemyRoutine()
+    {
+        while (spawnedEnemies < maxEnemiesPerChunk) {
+            SpawnEnemy();
+            spawnedEnemies++;
+
+            yield return new WaitForSeconds(spawnInterval);
+        }
     }
 }

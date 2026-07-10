@@ -57,6 +57,8 @@ MonoBehaviour:
   slamRefillThreshold: 1
   groundHorizontalMultiplier: 0.2
   maxHeight: 18.3
+  successfulSlamModifier: 2
+  baseBounceForce: 18
   isSlamming: 0
 --- !u!114 &6083935073869359672
 MonoBehaviour:

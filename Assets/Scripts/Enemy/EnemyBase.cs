@@ -13,8 +13,18 @@ public abstract class EnemyBase : MonoBehaviour
     }
     
     protected bool isAlive = true;
+
     public float slamChargeValue = .25f;
+
     public EnemyCategory category;
+
+    public int coins;
+
+    [SerializeField]private float bounceBonus = 0f;
+
+    //Exposes the private member bounceBonus.
+    public float BounceBonus => bounceBonus;
+
     protected virtual void Update()
     {
         if (isAlive) { return; }

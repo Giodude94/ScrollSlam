@@ -92,6 +92,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   slamChargeValue: 0.25
+  category: 0
+  coins: 2
+  bounceBonus: 2
   moveSpeed: 2
 --- !u!1 &8079984526216344366
 GameObject:

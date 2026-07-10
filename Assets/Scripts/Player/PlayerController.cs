@@ -26,7 +26,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float slamRefillThreshold = 1f;
 
     [Header("Ground Slam Penalty")]
-    [SerializeField] private float groundHorizontalMultiplier = 0.5f;
+    [SerializeField] private float groundHorizontalPenalty = 0.5f;
 
 
     [Header("Limits")]
@@ -38,8 +38,9 @@ public class PlayerController : MonoBehaviour
 
     private Rigidbody2D rb;
 
-    [SerializeField] private float successfulSlamModifier;
-    private float slamStartHorizontalVelocity;
+    [SerializeField] private float baseBounceForce = 18f;
+    [SerializeField] private float slamHorizontalVelocityBonus = 2f;
+    private float horizontalMomentum;
     private int remainingSlams;
     private bool hasLaunched;
     public bool isSlamming;
@@ -91,6 +92,7 @@ public class PlayerController : MonoBehaviour
         Vector2 launchDir = new(Mathf.Cos(rad), Mathf.Sin(rad));
 
         rb.AddForce(launchDir * launchForce, ForceMode2D.Impulse);
+        horizontalMomentum = rb.velocity.x;
 
         GameManager.Instance.StartRun();
     }
@@ -102,9 +104,7 @@ public class PlayerController : MonoBehaviour
         
         remainingSlams--;
 
-        slamStartHorizontalVelocity = rb.velocity.x;
-
-        rb.velocity = new Vector2(rb.velocity.x, 0f);
+        rb.velocity = new Vector2(horizontalMomentum, 0f);
         rb.AddForce(Vector2.down * slamForce, ForceMode2D.Impulse);
 
         slamCount++;
@@ -140,10 +140,9 @@ public class PlayerController : MonoBehaviour
             {
                 slamRefillCharge += enemy.slamChargeValue;
             }
-            
         }
         
-        Bounce(true);
+        Bounce(true,enemy.BounceBonus);
 
     }
     private void OnCollisionEnter2D(Collision2D collision)
@@ -153,36 +152,32 @@ public class PlayerController : MonoBehaviour
         if (collision.collider.CompareTag("Ground")) 
         {
             Debug.Log("Bounced on Ground");
-            Bounce(false);
+            Bounce(false,0f);
         }
     }
-    private void Bounce(bool hitEnemy)
+    private void Bounce(bool hitEnemy, float enemyBounceBonus)
     {
-        float currentX;
+        bool sucessfullSlam = isSlamming && hitEnemy;
+        
+        isSlamming = false;
 
-        if (isSlamming)
+        if (hitEnemy)
         {
-            Debug.Log("Hit enemy while slamming.");
-            //Multiplying horizontal velocity by value to increase speed.
-            currentX = slamStartHorizontalVelocity * successfulSlamModifier;
+            //Rewarding successful slams with extra horizontal speed.
+            if (sucessfullSlam) 
+            {
+                horizontalMomentum *= slamHorizontalVelocityBonus;
+            }
         }
         else
         {
-            Debug.Log("Hit enemy NOT while slamming.");
-            //If we are not slamming then the force should stay the same if bouncing on an enemy.
-            currentX = rb.velocity.x;
-        } 
-
-        isSlamming = false;
-
-        if (!hitEnemy)
-        {
-            //Slows down when the player slams on the ground.
-            currentX *= groundHorizontalMultiplier;
+            //Ground slam penalty
+            horizontalMomentum *= groundHorizontalPenalty;
         }
 
-        //
-        rb.velocity = new Vector2(currentX,0f);
+        float bounceForce = baseBounceForce + enemyBounceBonus;
+        
+        rb.velocity = new Vector2(horizontalMomentum,0f);
         rb.AddForce(Vector2.up * bounceForce, ForceMode2D.Impulse);
 
         remainingSlams = Mathf.Min(remainingSlams, maxSlams);

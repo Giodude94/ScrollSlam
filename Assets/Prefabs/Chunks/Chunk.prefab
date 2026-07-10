@@ -306,6 +306,8 @@ MonoBehaviour:
   spawnAreas:
   - {fileID: 1734034888318839685}
   - {fileID: 404817118447737575}
+  spawnInterval: 2
+  maxEnemiesPerChunk: 20
 --- !u!1 &5045408536495972836
 GameObject:
   m_ObjectHideFlags: 0
