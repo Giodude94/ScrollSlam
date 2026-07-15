@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3d97d73d55f67e24a8dc1718025885dd, type: 3}
+  m_Name: DefaultEncounterConfig
+  m_EditorClassIdentifier: 
+  encounters:
+  - SpawnDistance: 15
+    minEnemies: 2
+    maxEnemies: 30
+    spawnConfig: {fileID: 11400000, guid: 7619fe3132f770948bdea004b5e56ace, type: 2}
+    heightOffset: 0
+    encounterWidth: 8

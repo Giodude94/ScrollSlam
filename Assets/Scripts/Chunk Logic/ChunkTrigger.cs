@@ -24,6 +24,6 @@ public class ChunkTrigger : MonoBehaviour
         if (!other.CompareTag("Player")) { return; }
 
         triggered = true;
-        ownerChunk.OnPlayerEnteredChunk();
+        ownerChunk.OnPlayerEnteredChunk(other.transform);
     }
 }

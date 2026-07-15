@@ -11,4 +11,7 @@ public class EnemySpawnEntry
 
     [Header("Weighted Spawn")]
     public int weight = 1;
+
+    [Header("Spawn Location")]
+    public SpawnAreaType preferredArea;
 }

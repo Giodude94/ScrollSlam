@@ -61,7 +61,7 @@ public class PlayerController : MonoBehaviour
     }
     void Update()
     {
-        Debug.Log(GameManager.Instance.CurrentState);
+        //Debug.Log(GameManager.Instance.CurrentState);
 
         //If the game is over then the inputs of the player should not be valid.
         if (GameManager.Instance.CurrentState == GameManager.GameState.GameOver) { return; }
@@ -99,7 +99,7 @@ public class PlayerController : MonoBehaviour
     private void Slam()
     {
 
-        Debug.Log("Slam is being called");
+        //Debug.Log("Slam is being called");
         isSlamming = true;
         
         remainingSlams--;
@@ -151,7 +151,7 @@ public class PlayerController : MonoBehaviour
 
         if (collision.collider.CompareTag("Ground")) 
         {
-            Debug.Log("Bounced on Ground");
+            //Debug.Log("Bounced on Ground");
             Bounce(false,0f);
         }
     }
