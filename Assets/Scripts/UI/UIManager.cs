@@ -10,6 +10,7 @@ public class UIManager : MonoBehaviour
     [Header("Score UI")]
     [SerializeField] private TextMeshProUGUI scoreText;
     [SerializeField] private TextMeshProUGUI bestScoreText;
+    [SerializeField] private TextMeshProUGUI coinsText;
 
     [Header("Panels")]
     [SerializeField] private GameObject gameOverPanel;
@@ -34,6 +35,8 @@ public class UIManager : MonoBehaviour
         scoreText.text = "Current Score: " + Mathf.FloorToInt(GameManager.Instance.Score).ToString();
 
         bestScoreText.text = "Best: " + Mathf.FloorToInt(GameManager.Instance.BestScore).ToString();
+
+        
 
         if(GameManager.Instance.CurrentState == GameManager.GameState.GameOver)
         {

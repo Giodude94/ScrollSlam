@@ -31,6 +31,9 @@ public class PlayerController : MonoBehaviour
 
     [Header("Limits")]
     [SerializeField] private float maxHeight = 25f;
+    [SerializeField] private float baseMaxHorizontalSpeed = 30f;
+    private float currentMaxHorizontalSpeed;
+
 
     [Header("API Stats")]
     int slamCount = 0;
@@ -54,13 +57,17 @@ public class PlayerController : MonoBehaviour
     void Start()
     {
         remainingSlams = maxSlams;
+        currentMaxHorizontalSpeed = baseMaxHorizontalSpeed;
+        
     }
     void FixedUpdate()
     {
         ClampCeiling();
+        ClampHorizontalSpeed();
     }
     void Update()
     {
+        Debug.Log("The velocity for the player is: " + rb.velocity.x);
         //Debug.Log(GameManager.Instance.CurrentState);
 
         //If the game is over then the inputs of the player should not be valid.
@@ -120,6 +127,14 @@ public class PlayerController : MonoBehaviour
         if (rb.velocity.y > 0f)
         {
             rb.velocity = new Vector2(rb.velocity.x, 0f);
+        }
+    }
+
+    private void ClampHorizontalSpeed()
+    {
+        if (Mathf.Abs(rb.velocity.x) > currentMaxHorizontalSpeed)
+        {
+            rb.velocity = new Vector2(Mathf.Sign(rb.velocity.x) * currentMaxHorizontalSpeed,rb.velocity.y);
         }
     }
     private void OnTriggerEnter2D(Collider2D other)
@@ -224,4 +239,6 @@ public class PlayerController : MonoBehaviour
     public int GetMaxSlam() { return maxSlams; }
     public float GetSlamFillCharge() { return slamRefillCharge; }
     public float GetThresholdValue() { return slamRefillThreshold; }
+    public float GetMaxHorizSpeed() { return currentMaxHorizontalSpeed; }
+    public void SetMaxHorizSpeed(float speed) { currentMaxHorizontalSpeed = speed; }
 }

@@ -13,9 +13,9 @@ MonoBehaviour:
   m_Name: DefaultEncounterConfig
   m_EditorClassIdentifier: 
   encounters:
-  - SpawnDistance: 15
+  - SpawnDistance: 6.11
     minEnemies: 2
     maxEnemies: 30
     spawnConfig: {fileID: 11400000, guid: 7619fe3132f770948bdea004b5e56ace, type: 2}
     heightOffset: 0
-    encounterWidth: 8
+    encounterWidth: 20.8

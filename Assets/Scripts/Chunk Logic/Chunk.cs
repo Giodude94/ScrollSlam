@@ -90,13 +90,9 @@ public class Chunk : MonoBehaviour
 
             Encounter encounter = encounterConfig.encounters[i];
 
-            Debug.Log(
-                $"Encounter {i} | Distance: {distanceIntoChunk:F1} / {encounter.SpawnDistance:F1}"
-            );
-
             if (distanceIntoChunk + spawnLookAhead >= encounter.SpawnDistance)
             {
-                Debug.Log($"Spawning Encounter {i}");
+                //Debug.Log($"Spawning Encounter {i}");
 
                 SpawnEncounter(encounter);
 
