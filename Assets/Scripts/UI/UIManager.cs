@@ -11,6 +11,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI scoreText;
     [SerializeField] private TextMeshProUGUI bestScoreText;
     [SerializeField] private TextMeshProUGUI coinsText;
+    [SerializeField] private TextMeshProUGUI totalCoinsText;
 
     [Header("Panels")]
     [SerializeField] private GameObject gameOverPanel;
@@ -36,6 +37,9 @@ public class UIManager : MonoBehaviour
 
         bestScoreText.text = "Best: " + Mathf.FloorToInt(GameManager.Instance.BestScore).ToString();
 
+        coinsText.text = "Coins: " + CoinManager.Instance.GetCurrentCoins().ToString();
+
+        totalCoinsText.text = "Total Coins: " + CoinManager.Instance.GetTotalCoins().ToString();
         
 
         if(GameManager.Instance.CurrentState == GameManager.GameState.GameOver)

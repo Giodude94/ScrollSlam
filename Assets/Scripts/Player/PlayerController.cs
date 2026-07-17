@@ -19,9 +19,7 @@ public class PlayerController : MonoBehaviour
     [Header("Slam")]
     [SerializeField] private float slamForce = 40f;
     [SerializeField] private float bounceForce = 18f;
-    [SerializeField]
-    [Range(1,10)]
-    private int maxSlams = 3;
+    [SerializeField][Range(1,10)] private int maxSlams = 3;
     [SerializeField] private float slamRefillCharge;
     [SerializeField] private float slamRefillThreshold = 1f;
 
@@ -62,12 +60,14 @@ public class PlayerController : MonoBehaviour
     }
     void FixedUpdate()
     {
+        //Debug.Log("The velocity for the player is: " + rb.velocity.x);
         ClampCeiling();
         ClampHorizontalSpeed();
+        Debug.Log("The velocity for the player is: " + rb.velocity.x);
     }
     void Update()
     {
-        Debug.Log("The velocity for the player is: " + rb.velocity.x);
+        
         //Debug.Log(GameManager.Instance.CurrentState);
 
         //If the game is over then the inputs of the player should not be valid.

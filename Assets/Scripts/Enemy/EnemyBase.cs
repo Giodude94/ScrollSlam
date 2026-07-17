@@ -18,7 +18,7 @@ public abstract class EnemyBase : MonoBehaviour
 
     public EnemyCategory category;
 
-    public int coins;
+    public int coinDrop;
 
     [SerializeField]private float bounceBonus = 0f;
 
@@ -33,7 +33,8 @@ public abstract class EnemyBase : MonoBehaviour
     public virtual void OnHitByPlayer()
     {
         if(!isAlive) { return; }
-        
+
+        CoinManager.Instance.SetCurrentCoins(coinDrop);
         Die();
     }
     protected virtual void Die()

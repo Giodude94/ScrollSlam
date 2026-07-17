@@ -81,6 +81,7 @@ public class GameManager : MonoBehaviour
             gameOverPanel.SetActive(true);
         }
 
+        CoinManager.Instance.SetCurrentCoinsToStash();
         SendScoreEvent();
     }
 
