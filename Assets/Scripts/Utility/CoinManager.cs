@@ -11,10 +11,6 @@ public class CoinManager : MonoBehaviour
     private int currentRunCoins = 0;
     private int totalCoins;
 
-    public void AddRunCoins()
-    {
-        //totalCoins += runCoins;
-    }
     private void Start()
     {
         //PlayerPrefs.DeleteKey("TotalCoins");
@@ -29,5 +25,15 @@ public class CoinManager : MonoBehaviour
     public void SetCurrentCoinsToStash()
     {
         PlayerPrefs.SetInt("TotalCoins", currentRunCoins + totalCoins);
+    }
+    public bool TrySpendCoins(int costOfItem)
+    {
+        if (costOfItem <= totalCoins)
+        {
+            //Performing arithmetic for purchasing item.
+            totalCoins = totalCoins - costOfItem;
+            return true;
+        }
+        return false;
     }
 }

@@ -4,12 +4,10 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 
-
-
 [RequireComponent(typeof(Rigidbody2D))]
 [RequireComponent(typeof(Collider2D))]
 
- 
+
 public class PlayerController : MonoBehaviour
 {
     [Header("Launch")]
@@ -17,9 +15,8 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float launchAngle = 45f;
 
     [Header("Slam")]
-    [SerializeField] private float slamForce = 40f;
-    [SerializeField] private float bounceForce = 18f;
-    [SerializeField][Range(1,10)] private int maxSlams = 3;
+    //[SerializeField] private float slamForce = 40f;
+    //[SerializeField][Range(1, 10)] private int maxSlams = 3;
     [SerializeField] private float slamRefillCharge;
     [SerializeField] private float slamRefillThreshold = 1f;
 
@@ -28,18 +25,23 @@ public class PlayerController : MonoBehaviour
 
 
     [Header("Limits")]
-    [SerializeField] private float maxHeight = 25f;
-    [SerializeField] private float baseMaxHorizontalSpeed = 30f;
-    private float currentMaxHorizontalSpeed;
+    //[SerializeField] private float maxHeight = 25f;
+    //[SerializeField] private float baseMaxHorizontalSpeed = 30f;
+    //private float currentMaxHorizontalSpeed;
 
+    [Header("Ceiling")]
+    [SerializeField] private float ceilingSlowZone = 3f;
+    [SerializeField] private float minimumCeilingMultiplier = 0.2f;
 
     [Header("API Stats")]
     int slamCount = 0;
     string sessionId;
 
+    [Header("References")]
+    private PlayerStats playerStats;
+
     private Rigidbody2D rb;
 
-    [SerializeField] private float baseBounceForce = 18f;
     [SerializeField] private float slamHorizontalVelocityBonus = 2f;
     private float horizontalMomentum;
     private int remainingSlams;
@@ -51,12 +53,19 @@ public class PlayerController : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         rb.gravityScale = 3f;
         rb.interpolation = RigidbodyInterpolation2D.Interpolate;
+        playerStats = GetComponent<PlayerStats>();
+
+        Debug.Log($"Object: {gameObject.name}");
+        Debug.Log($"PlayerStats found: {playerStats}");
+
+        if (playerStats != null) 
+        {
+            Debug.Log("PlayerStats component is missing!");
+        }
     }
     void Start()
     {
-        remainingSlams = maxSlams;
-        currentMaxHorizontalSpeed = baseMaxHorizontalSpeed;
-        
+        remainingSlams = playerStats.MaxSlams;
     }
     void FixedUpdate()
     {
@@ -91,7 +100,7 @@ public class PlayerController : MonoBehaviour
     private void Launch()
     {
         hasLaunched = true;
-        remainingSlams = maxSlams;
+        remainingSlams = playerStats.MaxSlams;
 
         rb.velocity = Vector2.zero;
 
@@ -112,29 +121,41 @@ public class PlayerController : MonoBehaviour
         remainingSlams--;
 
         rb.velocity = new Vector2(horizontalMomentum, 0f);
-        rb.AddForce(Vector2.down * slamForce, ForceMode2D.Impulse);
+        rb.AddForce(Vector2.down * playerStats.SlamForce, ForceMode2D.Impulse);
 
         slamCount++;
         SendSlamEvent();
     }
-
     private void ClampCeiling()
     {
-        if (transform.position.y <= maxHeight) { return; }
+        float distanceToCeiling = playerStats.MaxHeight - transform.position.y;
 
-        transform.position = new Vector3(transform.position.x, maxHeight, transform.position.z);
-
-        if (rb.velocity.y > 0f)
+        // Gradually slow upward movement as we approach the ceiling.
+        if (rb.velocity.y > 0f && distanceToCeiling <= ceilingSlowZone)
         {
-            rb.velocity = new Vector2(rb.velocity.x, 0f);
+            float multiplier = Mathf.InverseLerp(0f, ceilingSlowZone, distanceToCeiling);
+
+            multiplier = Mathf.Lerp(minimumCeilingMultiplier, 1f, multiplier);
+
+            rb.velocity = new Vector2(rb.velocity.x, rb.velocity.y * multiplier);
+        }
+
+        // Final hard cap.
+        if (transform.position.y > playerStats.MaxHeight)
+        {
+            transform.position = new Vector3(transform.position.x, playerStats.MaxHeight, transform.position.z);
+
+            if (rb.velocity.y > 0f)
+            {
+                rb.velocity = new Vector2(rb.velocity.x,0f);
+            }
         }
     }
-
     private void ClampHorizontalSpeed()
     {
-        if (Mathf.Abs(rb.velocity.x) > currentMaxHorizontalSpeed)
+        if (Mathf.Abs(rb.velocity.x) > playerStats.MaxSpeed)
         {
-            rb.velocity = new Vector2(Mathf.Sign(rb.velocity.x) * currentMaxHorizontalSpeed,rb.velocity.y);
+            rb.velocity = new Vector2(Mathf.Sign(rb.velocity.x) * playerStats.MaxSpeed, rb.velocity.y);
         }
     }
     private void OnTriggerEnter2D(Collider2D other)
@@ -151,7 +172,7 @@ public class PlayerController : MonoBehaviour
         if (enemy != null)
         {
             enemy.OnHitByPlayer();
-            if (maxSlams != remainingSlams) 
+            if (playerStats.MaxSlams != remainingSlams) 
             {
                 slamRefillCharge += enemy.slamChargeValue;
             }
@@ -172,14 +193,14 @@ public class PlayerController : MonoBehaviour
     }
     private void Bounce(bool hitEnemy, float enemyBounceBonus)
     {
-        bool sucessfullSlam = isSlamming && hitEnemy;
+        bool sucessfulSlam = isSlamming && hitEnemy;
         
         isSlamming = false;
 
         if (hitEnemy)
         {
             //Rewarding successful slams with extra horizontal speed.
-            if (sucessfullSlam) 
+            if (sucessfulSlam) 
             {
                 horizontalMomentum *= slamHorizontalVelocityBonus;
             }
@@ -190,12 +211,12 @@ public class PlayerController : MonoBehaviour
             horizontalMomentum *= groundHorizontalPenalty;
         }
 
-        float bounceForce = baseBounceForce + enemyBounceBonus;
+        float bounceForce = playerStats.BounceForce + enemyBounceBonus;
         
         rb.velocity = new Vector2(horizontalMomentum,0f);
         rb.AddForce(Vector2.up * bounceForce, ForceMode2D.Impulse);
 
-        remainingSlams = Mathf.Min(remainingSlams, maxSlams);
+        remainingSlams = Mathf.Min(remainingSlams, playerStats.MaxSlams);
     }
     private void CheckFailCondition()
     {
@@ -214,8 +235,7 @@ public class PlayerController : MonoBehaviour
         while (slamRefillCharge >= slamRefillThreshold)
         {
             slamRefillCharge -= slamRefillThreshold;
-            remainingSlams++;
-            //Mathf.Clamp(remainingSlams, 0, maxSlams);
+            remainingSlams = Mathf.Min(remainingSlams + 1, playerStats.MaxSlams);
         }
     }
     private void SendSlamEvent()
@@ -236,9 +256,9 @@ public class PlayerController : MonoBehaviour
         ApiClient.Instance.SendEvent(json);
     }
     public int GetCurrentSlam() { return remainingSlams; }
-    public int GetMaxSlam() { return maxSlams; }
+    public int GetMaxSlam() { return playerStats.MaxSlams; }
     public float GetSlamFillCharge() { return slamRefillCharge; }
     public float GetThresholdValue() { return slamRefillThreshold; }
-    public float GetMaxHorizSpeed() { return currentMaxHorizontalSpeed; }
-    public void SetMaxHorizSpeed(float speed) { currentMaxHorizontalSpeed = speed; }
+    public float GetMaxHorizSpeed() { return playerStats.MaxSpeed; }
+
 }

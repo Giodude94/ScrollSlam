@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 3229661360622345210}
   - component: {fileID: 5172945024959992287}
   - component: {fileID: 1215204813866298286}
+  - component: {fileID: 3716610582274566539}
   m_Layer: 8
   m_Name: Player
   m_TagString: Player
@@ -50,15 +51,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   launchForce: 30
   launchAngle: 45
-  slamForce: 35
-  bounceForce: 18
-  maxSlams: 6
   slamRefillCharge: 0
   slamRefillThreshold: 1
-  groundHorizontalMultiplier: 0.2
-  maxHeight: 18.3
-  successfulSlamModifier: 2
-  baseBounceForce: 18
+  groundHorizontalPenalty: 0.5
+  ceilingSlowZone: 3
+  minimumCeilingMultiplier: 0.2
+  slamHorizontalVelocityBonus: 2
   isSlamming: 0
 --- !u!114 &6083935073869359672
 MonoBehaviour:
@@ -212,3 +210,20 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 0.27, y: 0.325}
   m_EdgeRadius: 0
+--- !u!114 &3716610582274566539
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3201690805585114297}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 38729869e06ad8743b67adca1cd873c1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  baseMaxSpeed: 20
+  baseBounceForce: 18
+  baseMaxHeight: 25
+  baseSlamForce: 40
+  baseMaxSlams: 3

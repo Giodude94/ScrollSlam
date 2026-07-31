@@ -21,8 +21,6 @@ public class SlamDisplay : MonoBehaviour
     private void Awake()
     {
         currSlam = playerController.GetCurrentSlam();
-        maxSlam = playerController.GetMaxSlam();
-
         //Running enable and disable in awake in order to differentiate similar logic in Update function calls.
         for (int i = jumps.Length - 1; i >= 0; i--)
         {
@@ -36,6 +34,10 @@ public class SlamDisplay : MonoBehaviour
             }
         }
 
+    }
+    private void Start()
+    {
+        maxSlam = playerController.GetMaxSlam();
     }
     // Update is called once per frame
     void Update()

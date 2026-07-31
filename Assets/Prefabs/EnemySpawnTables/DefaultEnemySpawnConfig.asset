@@ -24,4 +24,4 @@ MonoBehaviour:
   - enemyType: 1
     prefab: {fileID: 106447173046254976, guid: ea53bb7bd5dae47488b50392a5f738a8, type: 3}
     weight: 10
-    preferredArea: 1
+    preferredArea: 2
