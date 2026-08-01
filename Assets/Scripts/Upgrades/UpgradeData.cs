@@ -5,17 +5,20 @@ using UnityEngine;
 [System.Serializable]
 public class UpgradeData
 {
+    [Header("Upgrade")]
     public UpgradeType type;
 
-    [Header("Progression")]
+    [Header("Current Progress")]
+    [HideInInspector]
     public int level;
+
     public int maxLevel = 10;
 
-    [Header("Cost")]
-    public int baseCost = 100;
-    public int costIncrease = 50;
+    [Header("Effect")]
+    public float amountPerLevel = 1f;
 
-    [Header("Stat Increase")]
-    public float valueIncrPerLevel = 1f;
+    [Header("Economy")]
+    public int startingCost = 100;
+    public int costIncreasePerLevel = 50;
 
 }

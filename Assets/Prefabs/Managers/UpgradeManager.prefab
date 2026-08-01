@@ -25,7 +25,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7058034922987374410}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -9.4234085, y: 0.031396866, z: 0.07322836}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -44,16 +44,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cfda24686cb18e6489221f098fb9503f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  baseUpgradeCost: 100
-  costIncreasePerLevel: 50
   upgrades:
   - type: 0
-    level: 0
-    maxLevel: 0
-    baseCost: 0
-    costIncrease: 0
-    valueIncrPerLevel: 0
-  slamForceLevel: 0
-  maxSlamsLevel: 0
-  coinDropChanceLevel: 0
-  coinValueLevel: 0
+    level: 1
+    maxLevel: 10
+    amountPerLevel: 1
+    startingCost: 100
+    costIncreasePerLevel: 50
+  - type: 2
+    level: 1
+    maxLevel: 10
+    amountPerLevel: 1
+    startingCost: 100
+    costIncreasePerLevel: 50

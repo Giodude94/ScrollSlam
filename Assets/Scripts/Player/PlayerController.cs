@@ -55,12 +55,9 @@ public class PlayerController : MonoBehaviour
         rb.interpolation = RigidbodyInterpolation2D.Interpolate;
         playerStats = GetComponent<PlayerStats>();
 
-        Debug.Log($"Object: {gameObject.name}");
-        Debug.Log($"PlayerStats found: {playerStats}");
-
         if (playerStats != null) 
         {
-            Debug.Log("PlayerStats component is missing!");
+            //Debug.Log("PlayerStats component is missing!");
         }
     }
     void Start()
@@ -72,7 +69,7 @@ public class PlayerController : MonoBehaviour
         //Debug.Log("The velocity for the player is: " + rb.velocity.x);
         ClampCeiling();
         ClampHorizontalSpeed();
-        Debug.Log("The velocity for the player is: " + rb.velocity.x);
+        //Debug.Log("The velocity for the player is: " + rb.velocity.x);
     }
     void Update()
     {

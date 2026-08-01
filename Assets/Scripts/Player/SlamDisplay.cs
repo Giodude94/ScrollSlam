@@ -18,9 +18,11 @@ public class SlamDisplay : MonoBehaviour
     [Header("References")]
     public PlayerController playerController;
 
-    private void Awake()
+    private void Start()
     {
         currSlam = playerController.GetCurrentSlam();
+        maxSlam = playerController.GetMaxSlam();
+
         //Running enable and disable in awake in order to differentiate similar logic in Update function calls.
         for (int i = jumps.Length - 1; i >= 0; i--)
         {
@@ -33,11 +35,6 @@ public class SlamDisplay : MonoBehaviour
                 jumps[i].enabled = false;
             }
         }
-
-    }
-    private void Start()
-    {
-        maxSlam = playerController.GetMaxSlam();
     }
     // Update is called once per frame
     void Update()
@@ -47,7 +44,7 @@ public class SlamDisplay : MonoBehaviour
         maxSlam = playerController.GetMaxSlam();
         float currSlamRechargeValue = playerController.GetSlamFillCharge();
 
-       // Debug.Log($"Current Slam: {currSlam} Max Slam: {maxSlam} \n Current Slam Refill Value: {currSlamRechargeValue} Threshold value: {playerController.GetThresholdValue()}");
+        //Debug.Log($"Current Slam: {currSlam} Max Slam: {maxSlam} \n Current Slam Refill Value: {currSlamRechargeValue} Threshold value: {playerController.GetThresholdValue()}");
 
         
         //Will create visible icons based on the max number of jumps.

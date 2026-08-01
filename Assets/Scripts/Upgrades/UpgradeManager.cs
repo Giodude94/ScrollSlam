@@ -6,15 +6,8 @@ public class UpgradeManager : MonoBehaviour
 {
     public static UpgradeManager Instance { get; private set; }
 
-    [SerializeField] private int baseUpgradeCost = 100;
-    [SerializeField] private int costIncreasePerLevel = 50;
-
-    [Header("Upgrade Levels")]
+    [Header("Upgrades")]
     [SerializeField] private UpgradeData[] upgrades;
-    [SerializeField] private int slamForceLevel;
-    [SerializeField] private int maxSlamsLevel;
-    [SerializeField] private int coinDropChanceLevel;
-    [SerializeField] private int coinValueLevel;
 
     private void Awake()
     {
@@ -26,35 +19,8 @@ public class UpgradeManager : MonoBehaviour
 
         Instance = this;
     }
-    public int GetLevel(UpgradeType type)
-    {
-        UpgradeData upgrade = GetUpgrade(type);
 
-        if (upgrade == null)
-        {
-            return 0;
-        }
-        return upgrade.level;
-    }
-    public void LevelUp(UpgradeType type)
-    {
-        UpgradeData upgrade = GetUpgrade(type);
-
-        if(upgrade == null) {  return; }
-
-        if (upgrade.level >= upgrade.maxLevel) { return; }
-
-        upgrade.level++;
-    }
-    public int GetUpgradeCost(UpgradeType type)
-    {
-        UpgradeData upgrade = GetUpgrade(type);
-
-        if(upgrade == null) { return 0; }
-
-        return upgrade.baseCost + (upgrade.level * upgrade.costIncrease);
-    }
-    public UpgradeData GetUpgrade(UpgradeType type) 
+    public UpgradeData GetUpgrade(UpgradeType type)
     {
         foreach (UpgradeData upgrade in upgrades)
         {
@@ -63,6 +29,58 @@ public class UpgradeManager : MonoBehaviour
                 return upgrade;
             }
         }
+
         return null;
+    }
+
+    public int GetLevel(UpgradeType type)
+    {
+        UpgradeData upgrade = GetUpgrade(type);
+
+        return upgrade != null ? upgrade.level : 0;
+    }
+
+    public int GetUpgradeCost(UpgradeType type)
+    {
+        UpgradeData upgrade = GetUpgrade(type);
+
+        if (upgrade == null)
+            return 0;
+
+        return upgrade.startingCost +
+               (upgrade.level * upgrade.costIncreasePerLevel);
+    }
+
+    public bool CanPurchase(UpgradeType type)
+    {
+        UpgradeData upgrade = GetUpgrade(type);
+
+        if (upgrade == null)
+            return false;
+
+        if (upgrade.level >= upgrade.maxLevel)
+            return false;
+
+        return CoinManager.Instance.GetCurrentCoins() >= GetUpgradeCost(type);
+    }
+
+    public bool PurchaseUpgrade(UpgradeType type)
+    {
+        UpgradeData upgrade = GetUpgrade(type);
+
+        if (upgrade == null)
+            return false;
+
+        if (upgrade.level >= upgrade.maxLevel)
+            return false;
+
+        int cost = GetUpgradeCost(type);
+
+        if (!CoinManager.Instance.TrySpendCoins(cost))
+            return false;
+
+        upgrade.level++;
+
+        return true;
     }
 }

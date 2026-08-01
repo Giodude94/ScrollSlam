@@ -672,24 +672,40 @@ PrefabInstance:
       value: UpgradeManager
       objectReference: {fileID: 0}
     - target: {fileID: 7410811071875656289, guid: 451e17ad67bd44d4b8c86b5c798874f9, type: 3}
-      propertyPath: upgrades.Array.size
-      value: 6
-      objectReference: {fileID: 0}
-    - target: {fileID: 7410811071875656289, guid: 451e17ad67bd44d4b8c86b5c798874f9, type: 3}
-      propertyPath: upgrades.Array.data[1].type
+      propertyPath: maxSlamsLevel
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7410811071875656289, guid: 451e17ad67bd44d4b8c86b5c798874f9, type: 3}
-      propertyPath: upgrades.Array.data[2].type
+      propertyPath: coinValueLevel
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7410811071875656289, guid: 451e17ad67bd44d4b8c86b5c798874f9, type: 3}
+      propertyPath: slamForceLevel
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7410811071875656289, guid: 451e17ad67bd44d4b8c86b5c798874f9, type: 3}
+      propertyPath: coinDropChanceLevel
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7410811071875656289, guid: 451e17ad67bd44d4b8c86b5c798874f9, type: 3}
+      propertyPath: upgrades.Array.size
       value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 7410811071875656289, guid: 451e17ad67bd44d4b8c86b5c798874f9, type: 3}
-      propertyPath: upgrades.Array.data[3].type
+      propertyPath: upgrades.Array.data[1].type
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 7410811071875656289, guid: 451e17ad67bd44d4b8c86b5c798874f9, type: 3}
+      propertyPath: upgrades.Array.data[2].type
       value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 7410811071875656289, guid: 451e17ad67bd44d4b8c86b5c798874f9, type: 3}
-      propertyPath: upgrades.Array.data[4].type
+      propertyPath: upgrades.Array.data[3].type
       value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 7410811071875656289, guid: 451e17ad67bd44d4b8c86b5c798874f9, type: 3}
+      propertyPath: upgrades.Array.data[4].type
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 7410811071875656289, guid: 451e17ad67bd44d4b8c86b5c798874f9, type: 3}
       propertyPath: upgrades.Array.data[5].type
@@ -776,8 +792,16 @@ PrefabInstance:
       value: 20
       objectReference: {fileID: 0}
     - target: {fileID: 7410811071875656289, guid: 451e17ad67bd44d4b8c86b5c798874f9, type: 3}
+      propertyPath: upgrades.Array.data[1].startingCost
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 7410811071875656289, guid: 451e17ad67bd44d4b8c86b5c798874f9, type: 3}
       propertyPath: upgrades.Array.data[2].costIncrease
       value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 7410811071875656289, guid: 451e17ad67bd44d4b8c86b5c798874f9, type: 3}
+      propertyPath: upgrades.Array.data[2].startingCost
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7410811071875656289, guid: 451e17ad67bd44d4b8c86b5c798874f9, type: 3}
       propertyPath: upgrades.Array.data[3].costIncrease
@@ -790,6 +814,14 @@ PrefabInstance:
     - target: {fileID: 7410811071875656289, guid: 451e17ad67bd44d4b8c86b5c798874f9, type: 3}
       propertyPath: upgrades.Array.data[5].costIncrease
       value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 7410811071875656289, guid: 451e17ad67bd44d4b8c86b5c798874f9, type: 3}
+      propertyPath: upgrades.Array.data[1].amountPerLevel
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7410811071875656289, guid: 451e17ad67bd44d4b8c86b5c798874f9, type: 3}
+      propertyPath: upgrades.Array.data[2].amountPerLevel
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7410811071875656289, guid: 451e17ad67bd44d4b8c86b5c798874f9, type: 3}
       propertyPath: upgrades.Array.data[0].valueIncrPerLevel
@@ -809,11 +841,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7410811071875656289, guid: 451e17ad67bd44d4b8c86b5c798874f9, type: 3}
       propertyPath: upgrades.Array.data[4].valueIncrPerLevel
-      value: 15
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7410811071875656289, guid: 451e17ad67bd44d4b8c86b5c798874f9, type: 3}
       propertyPath: upgrades.Array.data[5].valueIncrPerLevel
       value: 15
+      objectReference: {fileID: 0}
+    - target: {fileID: 7410811071875656289, guid: 451e17ad67bd44d4b8c86b5c798874f9, type: 3}
+      propertyPath: upgrades.Array.data[1].costIncreasePerLevel
+      value: 50
       objectReference: {fileID: 0}
     - target: {fileID: 7752121231951346211, guid: 451e17ad67bd44d4b8c86b5c798874f9, type: 3}
       propertyPath: m_LocalPosition.x
@@ -1029,6 +1065,14 @@ PrefabInstance:
     - target: {fileID: 3201690805585114297, guid: ca3e9ae8c7938a640b1356da389c0a96, type: 3}
       propertyPath: m_Name
       value: Player
+      objectReference: {fileID: 0}
+    - target: {fileID: 3716610582274566539, guid: ca3e9ae8c7938a640b1356da389c0a96, type: 3}
+      propertyPath: baseMaxSpeed
+      value: 15
+      objectReference: {fileID: 0}
+    - target: {fileID: 3716610582274566539, guid: ca3e9ae8c7938a640b1356da389c0a96, type: 3}
+      propertyPath: baseMaxHeight
+      value: 5.5
       objectReference: {fileID: 0}
     - target: {fileID: 6083935073869359672, guid: ca3e9ae8c7938a640b1356da389c0a96, type: 3}
       propertyPath: jumps.Array.data[0]
