@@ -186,7 +186,7 @@ public class Chunk : MonoBehaviour
 
     public void OnPlayerEnteredChunk(Transform playerTransform)
     {
-        Debug.Log("Player entered chunk: " + name);
+        //Debug.Log("Player entered chunk: " + name);
 
         if (hasSpawned) { return; }
 

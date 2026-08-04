@@ -9,16 +9,14 @@ public class UpgradeData
     public UpgradeType type;
 
     [Header("Current Progress")]
-    [HideInInspector]
-    public int level;
-
+    public int level = 0;
     public int maxLevel = 10;
 
-    [Header("Effect")]
-    public float amountPerLevel = 1f;
-
-    [Header("Economy")]
+    [Header("Cost")]
     public int startingCost = 100;
-    public int costIncreasePerLevel = 50;
+    public int costIncreasePerLvl = 50;
+
+    [Header("Stat Increase")]
+    public float statIncreasePerLvl = 1f;
 
 }

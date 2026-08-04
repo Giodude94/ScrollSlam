@@ -713,11 +713,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7410811071875656289, guid: 451e17ad67bd44d4b8c86b5c798874f9, type: 3}
       propertyPath: upgrades.Array.data[0].level
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7410811071875656289, guid: 451e17ad67bd44d4b8c86b5c798874f9, type: 3}
       propertyPath: upgrades.Array.data[1].level
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7410811071875656289, guid: 451e17ad67bd44d4b8c86b5c798874f9, type: 3}
       propertyPath: upgrades.Array.data[2].level
@@ -1068,11 +1068,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3716610582274566539, guid: ca3e9ae8c7938a640b1356da389c0a96, type: 3}
       propertyPath: baseMaxSpeed
-      value: 15
+      value: 14
       objectReference: {fileID: 0}
     - target: {fileID: 3716610582274566539, guid: ca3e9ae8c7938a640b1356da389c0a96, type: 3}
       propertyPath: baseMaxHeight
-      value: 5.5
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 6083935073869359672, guid: ca3e9ae8c7938a640b1356da389c0a96, type: 3}
       propertyPath: jumps.Array.data[0]

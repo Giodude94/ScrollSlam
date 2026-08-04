@@ -18,7 +18,7 @@ public class PlayerStats : MonoBehaviour
 
         if (upgrade == null) { return baseValue; }
 
-        return baseValue + upgrade.level * upgrade.amountPerLevel;
+        return baseValue + upgrade.level * upgrade.statIncreasePerLvl;
     }
     public float MaxSpeed => CalculateStat(UpgradeType.MaxSpeed, baseMaxSpeed);
     public float BounceForce => CalculateStat(UpgradeType.BounceForce, baseBounceForce);

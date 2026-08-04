@@ -48,7 +48,7 @@ public class UpgradeManager : MonoBehaviour
             return 0;
 
         return upgrade.startingCost +
-               (upgrade.level * upgrade.costIncreasePerLevel);
+               (upgrade.level * upgrade.costIncreasePerLvl);
     }
 
     public bool CanPurchase(UpgradeType type)
@@ -71,6 +71,7 @@ public class UpgradeManager : MonoBehaviour
         if (upgrade == null)
             return false;
 
+        //If we are attempting to go past max level we return.
         if (upgrade.level >= upgrade.maxLevel)
             return false;
 
