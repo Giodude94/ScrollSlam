@@ -92,7 +92,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   slamChargeValue: 0.5
-  category: 2
+  category: 1
   coinDrop: 5
   bounceBonus: 7
   moveSpeed: 2

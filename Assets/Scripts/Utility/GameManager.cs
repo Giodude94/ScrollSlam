@@ -24,6 +24,7 @@ public class GameManager : MonoBehaviour
     public enum GameState
     {
         WaitingToStart,
+        Challenge,
         Running,
         GameOver
     }
@@ -54,7 +55,13 @@ public class GameManager : MonoBehaviour
             score += Time.deltaTime;
         }
     }
-
+    public void StartChallengeState()
+    {
+        CurrentState = GameState.Challenge;
+        //Enter logic for slowing down time when hitting a challenge enemy.
+        Time.timeScale = .001f;
+        
+    }
     public void StartRun()
     {
         score = 0f;

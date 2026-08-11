@@ -39,6 +39,7 @@ public class PlayerController : MonoBehaviour
 
     [Header("References")]
     private PlayerStats playerStats;
+    public SliderMinigame sliderMinigameObj;
 
     private Rigidbody2D rb;
 
@@ -54,6 +55,7 @@ public class PlayerController : MonoBehaviour
         rb.gravityScale = 3f;
         rb.interpolation = RigidbodyInterpolation2D.Interpolate;
         playerStats = GetComponent<PlayerStats>();
+        
 
         if (playerStats != null) 
         {
@@ -66,10 +68,8 @@ public class PlayerController : MonoBehaviour
     }
     void FixedUpdate()
     {
-        //Debug.Log("The velocity for the player is: " + rb.velocity.x);
         ClampCeiling();
         ClampHorizontalSpeed();
-        //Debug.Log("The velocity for the player is: " + rb.velocity.x);
     }
     void Update()
     {
@@ -168,14 +168,22 @@ public class PlayerController : MonoBehaviour
         //One slam kills enemies, therefore we are calling the subsequent charge logic here.
         if (enemy != null)
         {
+            //Call function to obtain coins from specific enemy and kill the instance of enemy.
+            if (other.GetComponent<EnemyBase>().category == EnemyBase.EnemyCategory.Special) 
+            {
+                //Minigame Challenge Logic
+                GameManager.Instance.StartChallengeState();
+                sliderMinigameObj.StartMinigame();
+
+            }
+
             enemy.OnHitByPlayer();
             if (playerStats.MaxSlams != remainingSlams) 
             {
                 slamRefillCharge += enemy.slamChargeValue;
             }
+            Bounce(true, enemy.BounceBonus);
         }
-        
-        Bounce(true,enemy.BounceBonus);
 
     }
     private void OnCollisionEnter2D(Collision2D collision)
