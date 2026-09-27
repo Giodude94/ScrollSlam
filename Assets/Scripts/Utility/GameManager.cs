@@ -62,6 +62,11 @@ public class GameManager : MonoBehaviour
         Time.timeScale = .001f;
         
     }
+    public void EndChallengeState()
+    {
+        CurrentState = GameState.Running;
+        Time.timeScale = 1f;
+    }
     public void StartRun()
     {
         score = 0f;

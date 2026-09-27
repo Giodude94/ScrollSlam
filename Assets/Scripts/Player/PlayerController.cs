@@ -23,12 +23,6 @@ public class PlayerController : MonoBehaviour
     [Header("Ground Slam Penalty")]
     [SerializeField] private float groundHorizontalPenalty = 0.5f;
 
-
-    [Header("Limits")]
-    //[SerializeField] private float maxHeight = 25f;
-    //[SerializeField] private float baseMaxHorizontalSpeed = 30f;
-    //private float currentMaxHorizontalSpeed;
-
     [Header("Ceiling")]
     [SerializeField] private float ceilingSlowZone = 3f;
     [SerializeField] private float minimumCeilingMultiplier = 0.2f;
@@ -78,7 +72,9 @@ public class PlayerController : MonoBehaviour
 
         //If the game is over then the inputs of the player should not be valid.
         if (GameManager.Instance.CurrentState == GameManager.GameState.GameOver) { return; }
-        
+        //If the current gamestate is not currently running the game then we return and do not execute logic.
+        if (GameManager.Instance.CurrentState == GameManager.GameState.Challenge) { return; }
+
         //Launching on left click down.
         if (!hasLaunched && Input.GetMouseButtonDown(0))
         {
@@ -222,6 +218,30 @@ public class PlayerController : MonoBehaviour
         rb.AddForce(Vector2.up * bounceForce, ForceMode2D.Impulse);
 
         remainingSlams = Mathf.Min(remainingSlams, playerStats.MaxSlams);
+    }
+    public void ApplySuccessfulBoost(float multiplier)
+    {
+        float direction = Mathf.Sign(rb.velocity.x);
+        float currentSpeed = Mathf.Abs(rb.velocity.x);
+
+        float newSpeed = currentSpeed * (1f + multiplier);
+
+        rb.velocity = new Vector2(
+            direction * newSpeed,
+            rb.velocity.y
+        );
+    }
+    public void ApplyFailedBoost(float multiplier)
+    {
+        float direction = Mathf.Sign(rb.velocity.x);
+        float currentSpeed = Mathf.Abs(rb.velocity.x);
+
+        float newSpeed = currentSpeed * (1f - multiplier);
+
+        rb.velocity = new Vector2(
+            direction * newSpeed,
+            rb.velocity.y
+        );
     }
     private void CheckFailCondition()
     {

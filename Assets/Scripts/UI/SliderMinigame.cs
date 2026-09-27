@@ -15,14 +15,22 @@ public class SliderMinigame : MonoBehaviour
     [SerializeField] private RectTransform handleSlideArea;
     [SerializeField] private float targetSize = .5f;
 
+    [Header("References")]
+    [SerializeField] private PlayerController playerController;
+
     private float targetMin;
     private float targetMax;
 
     private bool isActive;
     private bool movingForward = true;
 
+    private void Awake()
+    {
+        this.gameObject.SetActive(false);
+    }
     void Update()
     {
+        SetUILocation();
         //If the slider is not active then we backout of the logic immediately.
         if (!isActive) { return; }
 
@@ -34,8 +42,11 @@ public class SliderMinigame : MonoBehaviour
         }
     }
 
-    public void StartMinigame() 
+    public void StartMinigame()
     {
+        //Making the UI object visible
+        this.gameObject.SetActive(true);
+
         isActive = true;
         movingForward = true;
 
@@ -52,16 +63,13 @@ public class SliderMinigame : MonoBehaviour
     private void UpdateTargetVisual()
     {
         float width = handleSlideArea.rect.width;
-
-        Debug.Log($"Width: {width}");
-        Debug.Log($"Target min: {targetMin} and target max: {targetMax}");
         float targetWidth = (targetMax - targetMin) * width;
         float targetCenter = (targetMax + targetMin) / 2f;
 
         //Updating sizeDelta of values below increase the width/height of the target area.
         targetZone.sizeDelta = new Vector2(targetWidth, targetZone.sizeDelta.y);
-        targetZone.anchoredPosition = new Vector2((targetCenter - 0.5f) * width , targetZone.anchoredPosition.y);
-        Debug.Log($"The position of the anchored values are x: {(targetCenter - .5f) * width} and y: {targetZone.anchoredPosition.y}");
+        targetZone.anchoredPosition = new Vector2((targetCenter - 0.5f) * width, targetZone.anchoredPosition.y);
+
     }
     private void MoveIndicator()
     {
@@ -69,12 +77,12 @@ public class SliderMinigame : MonoBehaviour
 
         indicator.value += direction * indicatorSpeed * Time.unscaledDeltaTime;
 
-        if(indicator.value >= 1f)
+        if (indicator.value >= 1f)
         {
             indicator.value = 1f;
             movingForward = false;
         }
-        else if(indicator.value <= 0f)
+        else if (indicator.value <= 0f)
         {
             indicator.value = 0f;
             movingForward = true;
@@ -89,18 +97,36 @@ public class SliderMinigame : MonoBehaviour
         if (success)
         {
             SuccessfulHit();
+
         }
         else
         {
             FailedHit();
-        } 
+        }
+        this.gameObject.SetActive(false);
     }
     private void SuccessfulHit()
     {
         Debug.Log("Successful hit.");
+        playerController.ApplySuccessfulBoost(.5f);
+        GameManager.Instance.EndChallengeState();
+
+
     }
     private void FailedHit()
     {
         Debug.Log("Failed hit.");
+        playerController.ApplyFailedBoost(.5f);
+        GameManager.Instance.EndChallengeState();
+
     }
+
+    private void SetUILocation()
+    {
+        Vector3 screenPosition = Camera.main.WorldToScreenPoint(playerController.transform.position + Vector3.up * 1f);
+        handleSlideArea.GetComponentInParent<Transform>().position = screenPosition;
+        indicator.transform.localScale = new Vector3(.25f,.25f,.25f);
+        indicator.transform.position = screenPosition;
+    }
+
 }
