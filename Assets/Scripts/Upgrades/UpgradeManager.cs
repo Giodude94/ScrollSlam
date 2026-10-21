@@ -20,11 +20,15 @@ public class UpgradeManager : MonoBehaviour
         Instance = this;
     }
 
+    public UpgradeData[] GetAllUpgrades()
+    {
+        return upgrades;
+    }
     public UpgradeData GetUpgrade(UpgradeType type)
     {
         foreach (UpgradeData upgrade in upgrades)
         {
-            if (upgrade.type == type)
+            if (upgrade.definition.upgradeType == type)
             {
                 return upgrade;
             }
@@ -47,8 +51,8 @@ public class UpgradeManager : MonoBehaviour
         if (upgrade == null)
             return 0;
 
-        return upgrade.startingCost +
-               (upgrade.level * upgrade.costIncreasePerLvl);
+        return upgrade.definition.baseCost +
+               (upgrade.level * upgrade.definition.costIncreasePerLevel);
     }
 
     public bool CanPurchase(UpgradeType type)
@@ -58,7 +62,7 @@ public class UpgradeManager : MonoBehaviour
         if (upgrade == null)
             return false;
 
-        if (upgrade.level >= upgrade.maxLevel)
+        if (upgrade.level >= upgrade.definition.maxLevel)
             return false;
 
         return CoinManager.Instance.GetCurrentCoins() >= GetUpgradeCost(type);
@@ -72,7 +76,7 @@ public class UpgradeManager : MonoBehaviour
             return false;
 
         //If we are attempting to go past max level we return.
-        if (upgrade.level >= upgrade.maxLevel)
+        if (upgrade.level >= upgrade.definition.maxLevel)
             return false;
 
         int cost = GetUpgradeCost(type);

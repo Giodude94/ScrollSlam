@@ -16,7 +16,9 @@ public class UpgradeDefinition : ScriptableObject
 
     public int baseCost = 100;
 
-    public int costIncrease = 50;
+    public int costIncreasePerLevel = 50;
 
-    public float valuePerLevel = 2f;
+    public int statIncreasePerLvl = 1;
+
+    //public float valuePerLevel = 2f;
 }
