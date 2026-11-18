@@ -21,6 +21,9 @@ public class UpgradeCardUI : MonoBehaviour
         upgrade = upgradeData;
         shop = shopUI;
 
+        //Setting the button as interactable on initialization.
+        upgradeButton.interactable = true;
+        
         upgradeButton.onClick.RemoveAllListeners();
         upgradeButton.onClick.AddListener(Purchase);
 
@@ -50,6 +53,7 @@ public class UpgradeCardUI : MonoBehaviour
 
         if (maxedOut)
         {
+            Debug.Log("Max level has been reached.");
             costText.text = "MAX LEVEL";
             buttonText.text = "Maxed";
             upgradeButton.interactable = false;
@@ -63,8 +67,7 @@ public class UpgradeCardUI : MonoBehaviour
             costText.text = $"{cost} coins";
             buttonText.text = "Upgrade";
 
-            upgradeButton.interactable =
-                UpgradeManager.Instance.CanPurchase(
+            upgradeButton.interactable = UpgradeManager.Instance.CanPurchase(
                     definition.upgradeType
                 );
         }

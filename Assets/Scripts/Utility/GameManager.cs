@@ -25,6 +25,7 @@ public class GameManager : MonoBehaviour
     {
         WaitingToStart,
         Challenge,
+        Shop,
         Running,
         GameOver
     }
@@ -71,6 +72,7 @@ public class GameManager : MonoBehaviour
     {
         score = 0f;
         CurrentState = GameState.Running;
+        
     }
 
     public void GameOver()
@@ -101,6 +103,9 @@ public class GameManager : MonoBehaviour
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
+    public void StartShop(){ CurrentState = GameState.Shop; }
+    public void EndShop() { CurrentState = GameState.WaitingToStart; }
+
     private void SendScoreEvent()
     {
         GameEvent e = new GameEvent

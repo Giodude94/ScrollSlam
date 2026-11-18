@@ -53,7 +53,7 @@ public class UpgradeShopUI : MonoBehaviour
             return;
 
         coinBalanceText.text =
-            $"Coins: {CoinManager.Instance.GetCurrentCoins()}";
+            $"Coins: {CoinManager.Instance.GetTotalCoins()}";
     }
 }
 

@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 [RequireComponent(typeof(Rigidbody2D))]
 [RequireComponent(typeof(Collider2D))]
@@ -67,9 +68,9 @@ public class PlayerController : MonoBehaviour
     }
     void Update()
     {
-        
-        //Debug.Log(GameManager.Instance.CurrentState);
 
+        //Debug.Log(GameManager.Instance.CurrentState);
+        if (IsMouseOverHUD()) { return; }
         //If the game is over then the inputs of the player should not be valid.
         if (GameManager.Instance.CurrentState == GameManager.GameState.GameOver) { return; }
         //If the current gamestate is not currently running the game then we return and do not execute logic.
@@ -279,6 +280,10 @@ public class PlayerController : MonoBehaviour
         string json = JsonUtility.ToJson(e);
 
         ApiClient.Instance.SendEvent(json);
+    }
+    private bool IsMouseOverHUD()
+    {
+        return EventSystem.current.IsPointerOverGameObject();
     }
     public int GetCurrentSlam() { return remainingSlams; }
     public int GetMaxSlam() { return playerStats.MaxSlams; }

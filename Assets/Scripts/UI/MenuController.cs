@@ -4,19 +4,12 @@ using UnityEngine;
 
 public class MenuController : MonoBehaviour
 {
-    public enum PreviousScreen
-    {
-        MainMenu,
-        GameOver
-    }
 
     [Header("Panels")]
     //[SerializeField] private GameObject mainMenuPanel;
     [SerializeField] private GameObject gameOverPanel;
     [SerializeField] private GameObject upgradeShopPanel;
     [SerializeField] private GameObject hudPanel;
-
-    private PreviousScreen previousScreen;
 
 
     public void Start()
@@ -27,37 +20,21 @@ public class MenuController : MonoBehaviour
         hudPanel.SetActive(true);
     }
 
-    public void OpenShopFromMainMenu()
+    public void ShowShop()
     {
-        previousScreen = PreviousScreen.MainMenu;
-        ShowShop();
-    }
-
-    public void OpenShopFromGameOver()
-    {
-        previousScreen = PreviousScreen.GameOver;
-        ShowShop();
-    }
-
-    private void ShowShop()
-    {
+        GameManager.Instance.StartShop();
         //mainMenuPanel.SetActive(false);
         gameOverPanel.SetActive(false);
         hudPanel.SetActive(false);
         upgradeShopPanel.SetActive(true);
+
     }
 
-    public void CloseShop()
-    {
+    public void CloseShop() 
+    { 
+        gameOverPanel.SetActive(false);
         upgradeShopPanel.SetActive(false);
+        hudPanel.SetActive(true);
 
-        if (previousScreen == PreviousScreen.MainMenu)
-        {
-            //mainMenuPanel.SetActive(true);
-        }
-        else
-        {
-            gameOverPanel.SetActive(true);
-        }
     }
 }

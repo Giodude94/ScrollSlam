@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class UIManager : MonoBehaviour
 {
@@ -16,6 +17,9 @@ public class UIManager : MonoBehaviour
     [Header("Panels")]
     [SerializeField] private GameObject gameOverPanel;
 
+    [Header("Buttons")]
+    [SerializeField] private Button shopButton;
+
 
     private void Start()
     {
@@ -28,7 +32,7 @@ public class UIManager : MonoBehaviour
 
     private void Update()
     {
-        if (GameManager.Instance == null) 
+        if (GameManager.Instance == null)
         {
             return;
         }
@@ -40,13 +44,20 @@ public class UIManager : MonoBehaviour
         coinsText.text = "Coins: " + CoinManager.Instance.GetCurrentCoins().ToString();
 
         totalCoinsText.text = "Total Coins: " + CoinManager.Instance.GetTotalCoins().ToString();
-        
 
-        if(GameManager.Instance.CurrentState == GameManager.GameState.GameOver)
+
+        if (GameManager.Instance.CurrentState == GameManager.GameState.GameOver)
         {
             if (!gameOverPanel.activeSelf)
             {
                 gameOverPanel.SetActive(true);
+            }
+        }
+        else if (GameManager.Instance.CurrentState.Equals(GameManager.GameState.Running))
+        {
+            if (shopButton.gameObject.activeSelf)
+            {
+                shopButton.gameObject.SetActive(false);
             }
         }
     }

@@ -9,8 +9,16 @@ public class UpgradeManager : MonoBehaviour
     [Header("Upgrades")]
     [SerializeField] private UpgradeData[] upgrades;
 
+    //Power-Ups
+    private int currSlams = 0;
+    private int currSpeed = 0;
+
+
     private void Awake()
     {
+        //loading upgrade level count info.
+        LoadUpgradeLevels();
+
         if (Instance != null && Instance != this)
         {
             Destroy(gameObject);
@@ -18,6 +26,36 @@ public class UpgradeManager : MonoBehaviour
         }
 
         Instance = this;
+    }
+
+    private void SaveUpgradeLevels()
+    {
+        foreach (var upgrade in upgrades) 
+        {
+            string key = "Upgrade_" + upgrade.definition.upgradeType.ToString();
+            PlayerPrefs.SetInt(key, upgrade.level);
+        }
+
+        //PlayerPrefs.SetInt("SlamLevel", currSlams);
+        //PlayerPrefs.SetInt("SpeedLevel", currSpeed);
+        //PlayerPrefs.SetInt("SpeedLevel", 0);
+
+        PlayerPrefs.Save();
+    }
+
+    private void LoadUpgradeLevels()
+    {
+        foreach (var upgrade in upgrades) 
+        {
+            //Using Upgrade type as a unique naming value for upgrades.
+            string key = "Upgrade_" + upgrade.definition.upgradeType.ToString();
+
+            upgrade.level = PlayerPrefs.GetInt(key, 0);
+        
+        }
+        currSlams = PlayerPrefs.GetInt("SlamLevel");
+        currSpeed = PlayerPrefs.GetInt("SpeedLevel");
+
     }
 
     public UpgradeData[] GetAllUpgrades()
@@ -65,7 +103,10 @@ public class UpgradeManager : MonoBehaviour
         if (upgrade.level >= upgrade.definition.maxLevel)
             return false;
 
-        return CoinManager.Instance.GetCurrentCoins() >= GetUpgradeCost(type);
+        if (CoinManager.Instance == null)
+            return false;
+
+        return CoinManager.Instance.GetTotalCoins() >= GetUpgradeCost(type);
     }
 
     public bool PurchaseUpgrade(UpgradeType type)
