@@ -31,7 +31,8 @@ public class MenuController : MonoBehaviour
     }
 
     public void CloseShop() 
-    { 
+    {
+        //if (gameOverPanel != null) { }
         gameOverPanel.SetActive(false);
         upgradeShopPanel.SetActive(false);
         hudPanel.SetActive(true);
