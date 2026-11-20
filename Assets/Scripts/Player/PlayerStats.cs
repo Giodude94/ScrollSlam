@@ -20,11 +20,11 @@ public class PlayerStats : MonoBehaviour
 
         return baseValue + upgrade.level * upgrade.definition.statIncreasePerLvl;
     }
-    public float MaxSpeed => CalculateStat(UpgradeType.MaxSpeed, baseMaxSpeed);
+    public float MaxSpeed => CalculateStat(UpgradeType.Speed, baseMaxSpeed);
     public float BounceForce => CalculateStat(UpgradeType.BounceForce, baseBounceForce);
-    public float MaxHeight => CalculateStat(UpgradeType.MaxHeight, baseMaxHeight);
+    public float MaxHeight => CalculateStat(UpgradeType.Height, baseMaxHeight);
     public float SlamForce => CalculateStat(UpgradeType.SlamForce, baseSlamForce);
-    public int MaxSlams => Mathf.RoundToInt(CalculateStat(UpgradeType.MaxSlams, baseMaxSlams));
+    public int MaxSlams => Mathf.RoundToInt(CalculateStat(UpgradeType.SlamCount, baseMaxSlams));
 
 
 }

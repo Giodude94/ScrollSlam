@@ -170,6 +170,7 @@ public class PlayerController : MonoBehaviour
             {
                 //Minigame Challenge Logic
                 GameManager.Instance.StartChallengeState();
+                //Call StartMinigame to display the gauge to the UI
                 sliderMinigameObj.StartMinigame();
 
             }
@@ -222,27 +223,43 @@ public class PlayerController : MonoBehaviour
     }
     public void ApplySuccessfulBoost(float multiplier)
     {
-        float direction = Mathf.Sign(rb.velocity.x);
-        float currentSpeed = Mathf.Abs(rb.velocity.x);
 
-        float newSpeed = currentSpeed * (1f + multiplier);
+        //linearVelocity not available in this type.
+        float currentSpeed = rb.velocity.magnitude;
+        float boostedSpeed = currentSpeed * (1f + multiplier);
 
-        rb.velocity = new Vector2(
-            direction * newSpeed,
-            rb.velocity.y
+        float directionX = Mathf.Sign(rb.velocity.x);
+
+        //Adjusted launch angle when character is above certain point.
+        float launchAngle = sliderMinigameObj.GetSuccessfulHitAngle();
+
+        
+
+        float angleRadians = launchAngle * Mathf.Deg2Rad;
+
+        Vector2 launchDirection = new Vector2(
+                directionX * Mathf.Cos(angleRadians),
+                Mathf.Sin(angleRadians)
         );
+
+        rb.velocity = launchDirection * boostedSpeed;
     }
-    public void ApplyFailedBoost(float multiplier)
+    public void ApplyFailedBoost(float failedHitSpeedMultiplier)
     {
-        float direction = Mathf.Sign(rb.velocity.x);
-        float currentSpeed = Mathf.Abs(rb.velocity.x);
+        float currentSpeed = rb.velocity.magnitude;
+        float newSpeed = currentSpeed * failedHitSpeedMultiplier;
 
-        float newSpeed = currentSpeed * (1f - multiplier);
+        float directionX = Mathf.Sign(rb.velocity.x);
+        //failedHitAngle
+        float angleRadians = 15f * Mathf.Deg2Rad;
 
-        rb.velocity = new Vector2(
-            direction * newSpeed,
-            rb.velocity.y
+
+        Vector2 launchDirection = new Vector2(
+                directionX * Mathf.Cos(angleRadians),
+                Mathf.Sin(angleRadians)
         );
+
+        rb.velocity = launchDirection * newSpeed;
     }
     private void CheckFailCondition()
     {

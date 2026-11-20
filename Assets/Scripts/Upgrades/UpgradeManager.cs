@@ -28,7 +28,7 @@ public class UpgradeManager : MonoBehaviour
         Instance = this;
     }
 
-    private void SaveUpgradeLevels()
+    public void SaveUpgradeLevels()
     {
         foreach (var upgrade in upgrades) 
         {
@@ -43,7 +43,7 @@ public class UpgradeManager : MonoBehaviour
         PlayerPrefs.Save();
     }
 
-    private void LoadUpgradeLevels()
+    public void LoadUpgradeLevels()
     {
         foreach (var upgrade in upgrades) 
         {

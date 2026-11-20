@@ -15,6 +15,9 @@ public class SliderMinigame : MonoBehaviour
     [SerializeField] private RectTransform handleSlideArea;
     [SerializeField] private float targetSize = .5f;
 
+    [Header("BoostAngle")]
+    [SerializeField] private float successfulHitAngle = 25;
+
     [Header("References")]
     [SerializeField] private PlayerController playerController;
 
@@ -108,7 +111,8 @@ public class SliderMinigame : MonoBehaviour
     private void SuccessfulHit()
     {
         Debug.Log("Successful hit.");
-        playerController.ApplySuccessfulBoost(.5f);
+        //replace hardcoded values with values set in inspector.
+        playerController.ApplySuccessfulBoost(.15f);
         GameManager.Instance.EndChallengeState();
 
 
@@ -116,7 +120,7 @@ public class SliderMinigame : MonoBehaviour
     private void FailedHit()
     {
         Debug.Log("Failed hit.");
-        playerController.ApplyFailedBoost(.5f);
+        playerController.ApplyFailedBoost(.25f);
         GameManager.Instance.EndChallengeState();
 
     }
@@ -128,5 +132,7 @@ public class SliderMinigame : MonoBehaviour
         indicator.transform.localScale = new Vector3(.25f,.25f,.25f);
         indicator.transform.position = screenPosition;
     }
+
+    public float GetSuccessfulHitAngle() { return successfulHitAngle; }
 
 }

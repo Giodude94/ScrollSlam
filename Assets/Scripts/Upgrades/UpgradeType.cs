@@ -4,9 +4,9 @@ using UnityEngine;
 
 public enum UpgradeType
 {
-    MaxSpeed,
-    MaxHeight,
-    MaxSlams,
+    Speed,
+    Height,
+    SlamCount,
     BounceForce,
     SlamForce,
     CoinValue

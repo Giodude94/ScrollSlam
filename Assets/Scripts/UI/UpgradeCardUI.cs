@@ -71,6 +71,9 @@ public class UpgradeCardUI : MonoBehaviour
                     definition.upgradeType
                 );
         }
+
+        //Saving powerup levels
+        UpgradeManager.Instance.SaveUpgradeLevels();
     }
 
     private void Purchase()

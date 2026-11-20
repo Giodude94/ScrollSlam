@@ -22,6 +22,9 @@ public class Chunk : MonoBehaviour
     [SerializeField] private float minimumSpawnLookAhead = 10f;
     [SerializeField] private float velocityLookAheadMultiplier = .5f;
 
+    [Header("Boss Distance")]
+    [SerializeField] private float distanceToBossEncounter = 100f;
+
     private bool hasSpawned = false;
     private int chunkIndex;
 
