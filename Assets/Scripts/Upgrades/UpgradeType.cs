@@ -9,5 +9,7 @@ public enum UpgradeType
     SlamCount,
     BounceForce,
     SlamForce,
-    CoinValue
+    CoinValue,
+    FrictionReduction,
+    MissedSlamPenaltyReduction
 }

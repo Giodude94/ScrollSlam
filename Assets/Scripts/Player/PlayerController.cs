@@ -250,12 +250,16 @@ public class PlayerController : MonoBehaviour
         float newSpeed = currentSpeed * failedHitSpeedMultiplier;
 
         float directionX = Mathf.Sign(rb.velocity.x);
-        //failedHitAngle
-        float angleRadians = 15f * Mathf.Deg2Rad;
+
+        //Adjusted launch angle when character is above certain point.
+        float launchAngle = sliderMinigameObj.GetFailedHitAngle();
+        float speedReductionValue = sliderMinigameObj.GetSpeedReduction();
+
+        float angleRadians = launchAngle * Mathf.Deg2Rad;
 
 
         Vector2 launchDirection = new Vector2(
-                directionX * Mathf.Cos(angleRadians),
+                directionX * Mathf.Cos(angleRadians) * speedReductionValue,
                 Mathf.Sin(angleRadians)
         );
 

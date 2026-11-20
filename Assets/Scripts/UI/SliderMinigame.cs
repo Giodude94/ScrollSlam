@@ -15,8 +15,10 @@ public class SliderMinigame : MonoBehaviour
     [SerializeField] private RectTransform handleSlideArea;
     [SerializeField] private float targetSize = .5f;
 
-    [Header("BoostAngle")]
-    [SerializeField] private float successfulHitAngle = 25;
+    [Header("HitAnglesAndValues")]
+    [SerializeField] private float successfulHitAngle = 25f;
+    [SerializeField] private float failedHitAngle = 10f;
+    [SerializeField] private float speedReductionValue = .8f;
 
     [Header("References")]
     [SerializeField] private PlayerController playerController;
@@ -120,7 +122,7 @@ public class SliderMinigame : MonoBehaviour
     private void FailedHit()
     {
         Debug.Log("Failed hit.");
-        playerController.ApplyFailedBoost(.25f);
+        playerController.ApplyFailedBoost(.45f);
         GameManager.Instance.EndChallengeState();
 
     }
@@ -134,5 +136,7 @@ public class SliderMinigame : MonoBehaviour
     }
 
     public float GetSuccessfulHitAngle() { return successfulHitAngle; }
+    public float GetFailedHitAngle() { return failedHitAngle; }
+    public float GetSpeedReduction() { return speedReductionValue; }
 
 }
