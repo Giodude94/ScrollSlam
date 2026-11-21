@@ -20,15 +20,17 @@ public class PlayerController : MonoBehaviour
     //[SerializeField][Range(1, 10)] private int maxSlams = 3;
     [SerializeField] private float slamRefillCharge;
     [SerializeField] private float slamRefillThreshold = 1f;
+    public bool isSlamming;
 
-    [Header("Ground Slam Penalty")]
+    [Header("Penalties")]
     [SerializeField] private float groundHorizontalPenalty = 0.5f;
+    [SerializeField] private float groundFriction = 5f;
 
     [Header("Ceiling")]
     [SerializeField] private float ceilingSlowZone = 3f;
     [SerializeField] private float minimumCeilingMultiplier = 0.2f;
 
-    [Header("API Stats")]
+    [Header("APIStats")]
     int slamCount = 0;
     string sessionId;
 
@@ -36,13 +38,19 @@ public class PlayerController : MonoBehaviour
     private PlayerStats playerStats;
     public SliderMinigame sliderMinigameObj;
 
+    [Header("CollisionTimerStats")]
+    [SerializeField] float requiredSeconds = .2f;
+    float contactTime = 0f;
+    
+
     private Rigidbody2D rb;
 
     [SerializeField] private float slamHorizontalVelocityBonus = 2f;
     private float horizontalMomentum;
     private int remainingSlams;
     private bool hasLaunched;
-    public bool isSlamming;
+    private bool isGrounded = false;
+   
 
     void Awake()
     {
@@ -90,6 +98,7 @@ public class PlayerController : MonoBehaviour
 
         CheckFailCondition();
         SlamRechargeCheck();
+        ApplyGroundFriction();
     }
     private void Launch()
     {
@@ -186,13 +195,35 @@ public class PlayerController : MonoBehaviour
     }
     private void OnCollisionEnter2D(Collision2D collision)
     {
+        //If the player did not initiate a slam then we ignore the rest of the logic.
         if (!isSlamming){ return; }
+
+        //
 
         if (collision.collider.CompareTag("Ground")) 
         {
             //Debug.Log("Bounced on Ground");
             Bounce(false,0f);
         }
+    }
+    private void OnCollisionStay2D(Collision2D collision)
+    {
+
+        contactTime += Time.fixedDeltaTime;
+
+        if(contactTime >= requiredSeconds)
+        {
+            //Debug.Log($"Contact has lasted longer than {requiredSeconds} seconds");
+            isGrounded = true;
+            contactTime = 0f;
+        }
+    }
+
+    private void OnCollisionExit2D(Collision2D collision)
+    {
+        //resetting value for timer in OnCollisionStay2D;
+        contactTime = 0f;
+        isGrounded= false;
     }
     private void Bounce(bool hitEnemy, float enemyBounceBonus)
     {
@@ -283,6 +314,20 @@ public class PlayerController : MonoBehaviour
         {
             slamRefillCharge -= slamRefillThreshold;
             remainingSlams = Mathf.Min(remainingSlams + 1, playerStats.MaxSlams);
+        }
+    }
+    private void ApplyGroundFriction()
+    {
+        
+        if (isGrounded) 
+        {
+            Debug.Log("Applying Friction to character");
+            float friction = groundFriction * playerStats.FrictionReduction;
+
+            rb.velocity = new Vector2(
+                Mathf.MoveTowards(rb.velocity.x, 0f, friction * Time.fixedDeltaTime),
+                rb.velocity.y
+                );
         }
     }
     private void SendSlamEvent()

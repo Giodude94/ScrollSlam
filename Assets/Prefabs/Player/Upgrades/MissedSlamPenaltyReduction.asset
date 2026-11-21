@@ -12,9 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 139937d79c78e8a4ca374c50ed643f18, type: 3}
   m_Name: MissedSlamPenaltyReduction
   m_EditorClassIdentifier: 
-  upgradeType: 0
-  displayName: 
-  description: 
+  upgradeType: 7
+  displayName: Miss Slam Penalty
+  description: Reduces the amount of speed drop when bouncing on ground.
   maxLevel: 10
   baseCost: 100
   costIncreasePerLevel: 50

@@ -11,6 +11,8 @@ public class PlayerStats : MonoBehaviour
     [SerializeField] private float baseMaxHeight = 10f;
     [SerializeField] private float baseSlamForce = 40f;
     [SerializeField] private int baseMaxSlams = 3;
+    [SerializeField] private float baseFrictionReductionMultiplier = 1f;
+    [SerializeField] private float slamMissPenalty;
 
     private float CalculateStat(UpgradeType type, float baseValue)
     {
@@ -25,6 +27,8 @@ public class PlayerStats : MonoBehaviour
     public float MaxHeight => CalculateStat(UpgradeType.Height, baseMaxHeight);
     public float SlamForce => CalculateStat(UpgradeType.SlamForce, baseSlamForce);
     public int MaxSlams => Mathf.RoundToInt(CalculateStat(UpgradeType.SlamCount, baseMaxSlams));
+    public float FrictionReduction => CalculateStat(UpgradeType.FrictionReduction, baseFrictionReductionMultiplier);
+    public float SlamMissPenalty => CalculateStat(UpgradeType.MissedSlamPenaltyReduction, slamMissPenalty);
 
 
 }
