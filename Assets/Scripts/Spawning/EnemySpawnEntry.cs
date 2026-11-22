@@ -10,6 +10,7 @@ public class EnemySpawnEntry
     public GameObject prefab;
 
     [Header("Weighted Spawn")]
+    [Range(0,100)]
     public int weight = 1;
 
     [Header("Spawn Location")]

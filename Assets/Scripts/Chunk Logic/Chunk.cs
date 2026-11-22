@@ -96,7 +96,6 @@ public class Chunk : MonoBehaviour
             if (distanceIntoChunk + spawnLookAhead >= encounter.SpawnDistance)
             {
                 //Debug.Log($"Spawning Encounter {i}");
-
                 SpawnEncounter(encounter);
 
                 spawnedEncounters[i] = true;
@@ -127,6 +126,7 @@ public class Chunk : MonoBehaviour
 
         for (int i = 0; i < count; i++) 
         {
+
             SpawnEncounterEnemy(encounter);
         }
     }
@@ -136,6 +136,7 @@ public class Chunk : MonoBehaviour
         EnemySpawnEntry entry = GetWeightedEnemy(encounter.spawnConfig);
 
         if (entry == null) { return; }
+
 
         SpawnArea area = GetSpawnArea(entry.preferredArea);
 
@@ -161,9 +162,15 @@ public class Chunk : MonoBehaviour
     {
         int totalWeight = 0;
 
-        foreach(var entry in config.entries)
-        {
+        foreach(var entry in config.entries) { 
+
+            if (entry.weight == 0) 
+                { 
+                    Debug.Log($"Warning weight for {entry.prefab.name} is set to zero and will not spawn."); 
+                }
+            
             totalWeight += entry.weight;
+        
         }
 
         int roll = UnityEngine.Random.Range(0,totalWeight);
